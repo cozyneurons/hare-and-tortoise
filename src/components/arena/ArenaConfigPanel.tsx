@@ -104,15 +104,15 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
       {/* Cartridge Selection Slot */}
       <div className="mb-4">
         <div className="flex items-center justify-between border-b-2 border-gb-ink pb-2 mb-3">
-          <span className="font-pixel text-[10px] text-gb-pale">
+          <span className="font-pixel text-xs text-gb-pale font-bold">
             INSERT ALGORITHM CARTRIDGE:
           </span>
-          <span className="font-pixel text-[8px] text-hare">
+          <span className="font-pixel text-[10px] text-hare font-bold">
             GBC LAB CONSOLE
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           {MODES.map((m) => {
             const isSelected = mode === m.id;
             return (
@@ -122,23 +122,23 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                   sound.playClick();
                   onModeChange(m.id);
                 }}
-                className={`p-2.5 text-left border-2 transition-all ${
+                className={`p-3 text-left border-2 transition-all shadow-pixel-sm ${
                   isSelected
-                    ? 'bg-gb-cream text-gb-ink border-gb-ink shadow-pixel-sm font-bold'
+                    ? 'bg-gb-cream text-gb-ink border-gb-ink font-bold'
                     : 'bg-gb-olive/70 text-gb-cream border-gb-ink hover:bg-gb-leaf/60'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-pixel text-[9px] tracking-tight">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-pixel text-[11px] sm:text-xs tracking-tight font-bold">
                     {m.label}
                   </span>
-                  <span className={`px-1 py-0.5 text-[7px] font-pixel border border-gb-ink ${
+                  <span className={`px-1.5 py-0.5 text-[8.5px] font-pixel border border-gb-ink font-bold ${
                     isSelected ? 'bg-hare text-white' : 'bg-gb-forest text-gb-pale'
                   }`}>
                     {m.badge}
                   </span>
                 </div>
-                <div className="font-vt323 text-base text-gb-ink/80 leading-tight">
+                <div className="font-vt323 text-lg sm:text-xl text-gb-ink/90 leading-tight">
                   {m.desc}
                 </div>
               </button>

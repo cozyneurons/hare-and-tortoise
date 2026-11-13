@@ -317,11 +317,11 @@ export const LearningSection: React.FC = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-gb-ink" />
             <span className="w-2.5 h-2.5 rounded-full bg-green-500 border border-gb-ink" />
           </div>
-          <span className="font-pixel text-xs text-gb-cream">
+          <span className="font-pixel text-sm sm:text-base text-gb-cream font-bold">
             POKÉDEX // ALGORITHM ENCYCLOPEDIA
           </span>
         </div>
-        <div className="font-pixel text-[9px] text-gb-pale">
+        <div className="font-pixel text-xs text-gb-pale font-bold">
           ENTRIES RECORDED: 7 / 7
         </div>
       </div>
@@ -329,7 +329,7 @@ export const LearningSection: React.FC = () => {
       {/* Pokédex Dual-Pane Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane (4 cols): Pokédex List */}
-        <div className="lg:col-span-4 flex flex-col gap-2">
+        <div className="lg:col-span-4 flex flex-col gap-2.5">
           {pokedexEntries.map((entry, idx) => {
             const isCurrent = activeTab === idx;
             return (
@@ -339,21 +339,21 @@ export const LearningSection: React.FC = () => {
                   sound.playClick();
                   setActiveTab(idx);
                 }}
-                className={`flex items-center justify-between p-3 border-2 transition-all text-left ${
+                className={`flex items-center justify-between p-3.5 sm:p-4 border-2 transition-all text-left shadow-pixel-sm ${
                   isCurrent
                     ? 'bg-gb-cream text-gb-ink border-gb-ink shadow-pixel font-bold'
                     : 'bg-gb-olive text-gb-cream border-gb-ink hover:bg-gb-leaf'
                 }`}
               >
                 <div>
-                  <div className="font-pixel text-[8px] text-hare mb-0.5">
+                  <div className="font-pixel text-[11px] sm:text-xs text-hare font-bold mb-1">
                     {entry.num}
                   </div>
-                  <div className="font-pixel text-[9px]">
+                  <div className="font-pixel text-xs sm:text-[13px] tracking-wide font-bold leading-snug">
                     {entry.title}
                   </div>
                 </div>
-                <span className={isCurrent ? 'text-hare animate-bounce-pixel' : 'text-gb-pale'}>
+                <span className={`text-base sm:text-lg font-bold ${isCurrent ? 'text-hare animate-bounce-pixel' : 'text-gb-pale'}`}>
                   ▶
                 </span>
               </button>
@@ -366,39 +366,39 @@ export const LearningSection: React.FC = () => {
           {/* Top Data Bar */}
           <div className="flex items-center justify-between border-b-2 border-gb-ink pb-3 mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-1 bg-gb-surface border-2 border-gb-ink">
+              <div className="p-1.5 bg-gb-surface border-2 border-gb-ink">
                 {pokedexEntries[activeTab].sprite}
               </div>
               <div>
-                <span className="font-pixel text-[8px] text-hare">
+                <span className="font-pixel text-xs text-hare font-bold">
                   {pokedexEntries[activeTab].num}
                 </span>
-                <h3 className="font-pixel text-sm text-gb-ink">
+                <h3 className="font-pixel text-lg sm:text-xl text-gb-ink font-bold mt-0.5">
                   {pokedexEntries[activeTab].title}
                 </h3>
               </div>
             </div>
 
             <div className="text-right">
-              <span className="font-pixel text-[8px] px-2 py-0.5 bg-gb-forest text-gb-cream border border-gb-ink block">
+              <span className="font-pixel text-xs px-2.5 py-1 bg-gb-forest text-gb-cream border border-gb-ink font-bold block">
                 {pokedexEntries[activeTab].type}
               </span>
             </div>
           </div>
 
           {/* Stat Specs */}
-          <div className="grid grid-cols-3 gap-2 p-2 bg-gb-surface border-2 border-gb-ink font-pixel text-[8px] text-gb-ink mb-4 text-center">
+          <div className="grid grid-cols-3 gap-2 p-2.5 bg-gb-surface border-2 border-gb-ink font-pixel text-xs text-gb-ink mb-4 text-center">
             <div>
-              <span className="text-gb-forest opacity-70 block">HT / SPEED:</span>
-              <span className="font-bold">{pokedexEntries[activeTab].stats.height}</span>
+              <span className="text-[10px] text-gb-forest opacity-80 block mb-0.5">HT / SPEED:</span>
+              <span className="font-bold text-xs sm:text-sm">{pokedexEntries[activeTab].stats.height}</span>
             </div>
             <div>
-              <span className="text-gb-forest opacity-70 block">WT / SPACE:</span>
-              <span className="font-bold text-retro-success">{pokedexEntries[activeTab].stats.weight}</span>
+              <span className="text-[10px] text-gb-forest opacity-80 block mb-0.5">WT / SPACE:</span>
+              <span className="font-bold text-xs sm:text-sm text-retro-success">{pokedexEntries[activeTab].stats.weight}</span>
             </div>
             <div>
-              <span className="text-gb-forest opacity-70 block">HABITAT:</span>
-              <span className="font-bold text-hare truncate block">{pokedexEntries[activeTab].stats.habitat}</span>
+              <span className="text-[10px] text-gb-forest opacity-80 block mb-0.5">HABITAT:</span>
+              <span className="font-bold text-xs sm:text-sm text-hare truncate block">{pokedexEntries[activeTab].stats.habitat}</span>
             </div>
           </div>
 

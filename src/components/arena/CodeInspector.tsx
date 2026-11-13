@@ -34,13 +34,13 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ mode, currentStep 
   return (
     <div className="flex flex-col h-full rpg-box-dark border-4 border-gb-ink shadow-pixel text-gb-cream overflow-hidden select-none">
       {/* Header with Game Boy ROM Language Selectors */}
-      <div className="flex items-center justify-between px-3 py-2 bg-gb-olive border-b-2 border-gb-ink shrink-0">
-        <div className="flex items-center gap-1.5 font-pixel text-[9px] text-gb-cream">
+      <div className="flex items-center justify-between px-3.5 py-2.5 bg-gb-olive border-b-2 border-gb-ink shrink-0">
+        <div className="flex items-center gap-2 font-pixel text-xs text-gb-cream font-bold">
           <span>📟 ROM DISASSEMBLER</span>
         </div>
 
         {/* ROM Language Cartridges */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           {(['python', 'cpp', 'java'] as SupportedLanguage[]).map((lang) => (
             <button
               key={lang}
@@ -48,9 +48,9 @@ export const CodeInspector: React.FC<CodeInspectorProps> = ({ mode, currentStep 
                 sound.playClick();
                 setLanguage(lang);
               }}
-              className={`px-2 py-0.5 font-pixel text-[8px] border border-gb-ink transition-all ${
+              className={`px-2.5 py-1 font-pixel text-[9.5px] font-bold border border-gb-ink transition-all ${
                 language === lang
-                  ? 'bg-gb-cream text-gb-ink font-bold shadow-pixel-sm'
+                  ? 'bg-gb-cream text-gb-ink shadow-pixel-sm'
                   : 'bg-gb-forest text-gb-pale hover:text-white'
               }`}
             >

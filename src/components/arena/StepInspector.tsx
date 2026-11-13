@@ -40,19 +40,19 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ currentStep, total
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-gb-ink pb-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="font-pixel text-[10px] text-hare font-bold">
+            <span className="font-pixel text-xs text-hare font-bold">
               PROF. FLOYD'S LOG
             </span>
-            <span className="px-1.5 py-0.5 font-pixel text-[8px] bg-gb-forest text-gb-pale border border-gb-ink">
+            <span className="px-2 py-0.5 font-pixel text-[9.5px] bg-gb-forest text-gb-pale border border-gb-ink font-bold">
               TURN #{iteration} {totalSteps > 0 ? `/ ${totalSteps - 1}` : ''}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="px-2 py-0.5 font-pixel text-[8px] bg-gb-olive text-gb-cream border border-gb-ink">
+            <span className="px-2.5 py-0.5 font-pixel text-[9.5px] bg-gb-olive text-gb-cream border border-gb-ink font-bold">
               {phase.replace('_', ' ')}
             </span>
-            <span className={`px-2 py-0.5 font-pixel text-[8px] border border-gb-ink ${getStatusBadge()}`}>
+            <span className={`px-2.5 py-0.5 font-pixel text-[9.5px] border border-gb-ink font-bold ${getStatusBadge()}`}>
               {status.replace('_', ' ')}
             </span>
           </div>
