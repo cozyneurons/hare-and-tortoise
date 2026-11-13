@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   PixelHareSprite, 
   PixelTortoiseSprite, 
   PixelTree, 
-  PixelSignpost 
+  PixelSignpost,
+  PixelCollisionBurst
 } from '../pixel/PixelSprites';
 import { sound } from '../../utils/audio';
 
@@ -13,16 +14,98 @@ interface HeroSectionProps {
   onStartChallenges?: () => void;
 }
 
+// 6-Node Textbook Linked List with Loop (A -> B -> C -> D -> E -> F -> C)
+interface TrackNode {
+  id: number;
+  label: string;
+  x: number;
+  y: number;
+  isEntry: boolean;
+}
+
+const TRACK_NODES: TrackNode[] = [
+  { id: 0, label: 'A', x: 55, y: 105, isEntry: false },   // Head
+  { id: 1, label: 'B', x: 135, y: 105, isEntry: false },  // Prefix
+  { id: 2, label: 'C', x: 220, y: 105, isEntry: true },   // Cycle Entry (mu = 2)
+  { id: 3, label: 'D', x: 335, y: 48, isEntry: false },   // Cycle Top
+  { id: 4, label: 'E', x: 450, y: 105, isEntry: false },  // Cycle Right (Collision point!)
+  { id: 5, label: 'F', x: 335, y: 162, isEntry: false },  // Cycle Bottom
+];
+
+// Deterministic Simulation Steps of Floyd's Cycle Detection on this 6-node list
+interface DemoStep {
+  turn: number;
+  slowNode: number;
+  fastNode: number;
+  prevSlowNode: number | null;
+  prevFastNode: number | null;
+  isCollision: boolean;
+  phaseLabel: string;
+  note: string;
+}
+
+const DEMO_STEPS: DemoStep[] = [
+  {
+    turn: 0,
+    slowNode: 0,
+    fastNode: 0,
+    prevSlowNode: null,
+    prevFastNode: null,
+    isCollision: false,
+    phaseLabel: 'TURN 0 // INITIALIZATION',
+    note: 'Both Slow (1x) and Fast (2x) pointers start at HEAD (Node A).',
+  },
+  {
+    turn: 1,
+    slowNode: 1,
+    fastNode: 2,
+    prevSlowNode: 0,
+    prevFastNode: 0,
+    isCollision: false,
+    phaseLabel: 'TURN 1 // ADVANCE',
+    note: 'Slow advances 1 step to B. Fast leaps 2 steps directly to Loop Entry C.',
+  },
+  {
+    turn: 2,
+    slowNode: 2,
+    fastNode: 4,
+    prevSlowNode: 1,
+    prevFastNode: 2,
+    isCollision: false,
+    phaseLabel: 'TURN 2 // BOTH IN CYCLE',
+    note: 'Slow enters loop at C. Fast advances 2 steps to Node E inside the loop.',
+  },
+  {
+    turn: 3,
+    slowNode: 3,
+    fastNode: 2,
+    prevSlowNode: 2,
+    prevFastNode: 4,
+    isCollision: false,
+    phaseLabel: 'TURN 3 // CLOSING DISTANCE',
+    note: 'Slow moves to D. Fast loops (E→F→C)! Relative distance closes by Δv = 1.',
+  },
+  {
+    turn: 4,
+    slowNode: 4,
+    fastNode: 4,
+    prevSlowNode: 3,
+    prevFastNode: 2,
+    isCollision: true,
+    phaseLabel: 'TURN 4 // ★ COLLISION DETECTED!',
+    note: '★ COLLISION! Slow & Fast meet at Node E. Cycle is mathematically confirmed!',
+  },
+];
+
 export const HeroSection: React.FC<HeroSectionProps> = ({ 
   onEnterArena, 
   onExploreTheory,
   onStartChallenges,
 }) => {
-  // Mini animated preview state: two pointers looping around an 8-tile dirt track
-  const [slowPos, setSlowPos] = useState<number>(0);
-  const [fastPos, setFastPos] = useState<number>(0);
-  const [collision, setCollision] = useState<boolean>(false);
-  const trackCount = 8;
+  // Deterministic step state
+  const [currentStepIdx, setCurrentStepIdx] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Dialogue typewriter state
   const dialogueLines = [
@@ -33,30 +116,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
   const [currentLineIdx, setCurrentLineIdx] = useState(0);
 
-  // Animated loop timer
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSlowPos((prevSlow) => {
-        const nextSlow = (prevSlow + 1) % trackCount;
-        setFastPos((prevFast) => {
-          const nextFast = (prevFast + 2) % trackCount;
-          if (nextSlow === nextFast) {
-            setCollision(true);
-            sound.playCollision();
-            setTimeout(() => setCollision(false), 900);
-          }
-          return nextFast;
-        });
-        return nextSlow;
-      });
-    }, 1100);
+  const step = DEMO_STEPS[currentStepIdx];
+  const slowNode = TRACK_NODES[step.slowNode];
+  const fastNode = TRACK_NODES[step.fastNode];
 
-    return () => clearInterval(interval);
-  }, [trackCount]);
+  // Advance simulation deterministically
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    // Longer pause on collision step so viewer can appreciate the meeting
+    const delay = step.isCollision ? 3200 : 1600;
+
+    timerRef.current = setTimeout(() => {
+      setCurrentStepIdx((prev) => {
+        const next = (prev + 1) % DEMO_STEPS.length;
+        if (DEMO_STEPS[next].isCollision) {
+          sound.playCollision();
+        }
+        return next;
+      });
+    }, delay);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [isPlaying, currentStepIdx, step.isCollision]);
 
   const advanceDialogue = () => {
     sound.playClick();
     setCurrentLineIdx((prev) => (prev + 1) % dialogueLines.length);
+  };
+
+  const handleStepForward = () => {
+    sound.playClick();
+    setIsPlaying(false);
+    setCurrentStepIdx((prev) => {
+      const next = (prev + 1) % DEMO_STEPS.length;
+      if (DEMO_STEPS[next].isCollision) sound.playCollision();
+      return next;
+    });
+  };
+
+  const handleReset = () => {
+    sound.playClick();
+    setCurrentStepIdx(0);
+    setIsPlaying(true);
   };
 
   return (
@@ -120,8 +224,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* Overworld Animated Dirt Track */}
+          {/* Overworld Animated Floyd Circuit */}
           <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel">
+            {/* Header Telemetry */}
             <div className="flex items-center justify-between border-b-2 border-gb-ink pb-2 mb-3">
               <div className="flex items-center gap-3">
                 <span className="font-pixel text-[10px] text-gb-pale">OVERWORLD PATROL:</span>
@@ -134,113 +239,268 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
               </div>
               <div className="font-pixel text-[9px] text-gb-cream">
-                {collision ? (
+                {step.isCollision ? (
                   <span className="text-retro-error animate-blink font-bold">★ COLLISION! ★</span>
                 ) : (
-                  <span>&Delta;v = 1 TILE/TURN</span>
+                  <span>&Delta;v = 1 STEP/TURN</span>
                 )}
               </div>
             </div>
 
-            {/* Elliptical Tile Loop SVG */}
-            <div className="relative h-44 flex items-center justify-center bg-gb-olive/40 border-2 border-gb-ink p-2">
-              <svg viewBox="0 0 400 160" className="w-full h-full max-w-md">
-                {/* Cobblestone Dirt Path */}
-                <ellipse
-                  cx="200"
-                  cy="80"
-                  rx="145"
-                  ry="52"
-                  fill="none"
-                  stroke="#183C32"
-                  strokeWidth="8"
-                />
-                <ellipse
-                  cx="200"
-                  cy="80"
-                  rx="145"
-                  ry="52"
-                  fill="none"
-                  stroke="#F2E8CF"
-                  strokeWidth="4"
-                  strokeDasharray="6,6"
-                />
+            {/* Interactive Linked List with Loop Canvas Screen */}
+            <div className="relative bg-[#FAF7EE] border-3 border-gb-ink p-2 shadow-inner">
+              <svg viewBox="0 0 520 210" className="w-full h-auto max-h-[260px] select-none" shapeRendering="crispEdges">
+                <defs>
+                  {/* Background dot matrix */}
+                  <pattern id="hero-dots" width="16" height="16" patternUnits="userSpaceOnUse">
+                    <circle cx="2" cy="2" r="1.2" fill="#D8CCA8" opacity="0.6" />
+                  </pattern>
 
-                {/* Stepping Stone Tiles */}
-                {Array.from({ length: trackCount }).map((_, i) => {
-                  const angle = (2 * Math.PI * i) / trackCount;
-                  const x = 200 + 145 * Math.cos(angle);
-                  const y = 80 + 52 * Math.sin(angle);
+                  {/* Retro directional arrowhead */}
+                  <marker
+                    id="hero-arrow"
+                    viewBox="0 0 10 10"
+                    refX="22"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 1 L 9 5 L 0 9 z" fill="#0D1F18" />
+                  </marker>
 
-                  const isSlow = slowPos === i;
-                  const isFast = fastPos === i;
-                  const isCollisionHere = isSlow && isFast;
+                  <marker
+                    id="hero-arrow-active"
+                    viewBox="0 0 10 10"
+                    refX="22"
+                    refY="5"
+                    markerWidth="7"
+                    markerHeight="7"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M 0 1 L 9 5 L 0 9 z" fill="#E76F51" />
+                  </marker>
+                </defs>
+
+                {/* Dot matrix screen ground */}
+                <rect width="520" height="210" fill="url(#hero-dots)" />
+
+                {/* Directed Conduit Paths (Floyd Linked List: A -> B -> C -> D -> E -> F -> C) */}
+                <g>
+                  {/* A -> B */}
+                  <path d="M 55 105 L 135 105" fill="none" stroke="#0D1F18" strokeWidth="5" markerEnd="url(#hero-arrow)" />
+                  <path d="M 55 105 L 135 105" fill="none" stroke="#FAF7EE" strokeWidth="2" />
+
+                  {/* B -> C */}
+                  <path d="M 135 105 L 220 105" fill="none" stroke="#0D1F18" strokeWidth="5" markerEnd="url(#hero-arrow)" />
+                  <path d="M 135 105 L 220 105" fill="none" stroke="#FAF7EE" strokeWidth="2" />
+
+                  {/* C -> D (upper loop) */}
+                  <path d="M 220 105 Q 260 48 335 48" fill="none" stroke="#0D1F18" strokeWidth="5" markerEnd="url(#hero-arrow)" />
+                  <path d="M 220 105 Q 260 48 335 48" fill="none" stroke="#FAF7EE" strokeWidth="2" />
+
+                  {/* D -> E (upper loop) */}
+                  <path d="M 335 48 Q 410 48 450 105" fill="none" stroke="#0D1F18" strokeWidth="5" markerEnd="url(#hero-arrow)" />
+                  <path d="M 335 48 Q 410 48 450 105" fill="none" stroke="#FAF7EE" strokeWidth="2" />
+
+                  {/* E -> F (lower loop) */}
+                  <path d="M 450 105 Q 410 162 335 162" fill="none" stroke="#0D1F18" strokeWidth="5" markerEnd="url(#hero-arrow)" />
+                  <path d="M 450 105 Q 410 162 335 162" fill="none" stroke="#FAF7EE" strokeWidth="2" />
+
+                  {/* F -> C (loop closure back edge!) */}
+                  <path d="M 335 162 Q 260 162 220 105" fill="none" stroke="#0D1F18" strokeWidth="5" strokeDasharray="5,4" markerEnd="url(#hero-arrow)" />
+                  <path d="M 335 162 Q 260 162 220 105" fill="none" stroke="#FAF7EE" strokeWidth="2" strokeDasharray="5,4" />
+                </g>
+
+                {/* Nodes (Solid 3D Stepping Stone Platforms) */}
+                {TRACK_NODES.map((n) => {
+                  const isSlowHere = step.slowNode === n.id;
+                  const isFastHere = step.fastNode === n.id;
+                  const isCollisionHere = step.isCollision && isSlowHere && isFastHere;
+
+                  let borderColor = '#0D1F18';
+                  let fillColor = '#FFFFFF';
+                  let headerBg = '#386641';
+
+                  if (isCollisionHere) {
+                    borderColor = '#E63946';
+                    fillColor = '#FFF2B2';
+                    headerBg = '#E63946';
+                  } else if (isSlowHere && isFastHere) {
+                    borderColor = '#6A4C93';
+                    headerBg = '#6A4C93';
+                  } else if (isSlowHere) {
+                    borderColor = '#2A9D8F';
+                    headerBg = '#2A9D8F';
+                  } else if (isFastHere) {
+                    borderColor = '#E76F51';
+                    headerBg = '#E76F51';
+                  } else if (n.isEntry) {
+                    fillColor = '#FDE6B0';
+                    borderColor = '#E63946';
+                    headerBg = '#E63946';
+                  }
 
                   return (
-                    <g key={`tile-${i}`} transform={`translate(${x}, ${y})`}>
-                      {/* Square Tile */}
+                    <g key={`hero-node-${n.id}`} transform={`translate(${n.x}, ${n.y})`}>
+                      {/* 3D Drop Shadow */}
+                      <rect x="-18" y="-18" width="40" height="40" fill="#0D1F18" />
+
+                      {/* Main Square Platform */}
                       <rect
-                        x="-12"
-                        y="-12"
-                        width="24"
-                        height="24"
-                        fill={isCollisionHere ? '#E63946' : isSlow ? '#2A9D8F' : isFast ? '#E76F51' : '#F2E8CF'}
-                        stroke="#0D1F18"
-                        strokeWidth="2"
+                        x="-20"
+                        y="-20"
+                        width="40"
+                        height="40"
+                        fill={fillColor}
+                        stroke={borderColor}
+                        strokeWidth={isSlowHere || isFastHere ? 3.5 : 2.5}
                       />
+
+                      {/* Top Header Plate */}
+                      <rect x="-18" y="-18" width="36" height="10" fill={headerBg} />
                       <text
+                        x="0"
+                        y="-10"
                         textAnchor="middle"
-                        dy="4"
-                        fill={isCollisionHere || isSlow || isFast ? '#FFFFFF' : '#0D1F18'}
-                        fontSize="10"
+                        fill="#FFFFFF"
+                        fontSize="6"
+                        fontWeight="bold"
                         fontFamily="'Press Start 2P', monospace"
                       >
-                        {i}
+                        #{n.id}
                       </text>
+
+                      {/* Node Letter */}
+                      <text
+                        x="0"
+                        y="10"
+                        textAnchor="middle"
+                        fill="#0D1F18"
+                        fontSize="13"
+                        fontWeight="bold"
+                        fontFamily="'Press Start 2P', monospace"
+                      >
+                        {n.label}
+                      </text>
+
+                      {/* Cycle Entry Tag */}
+                      {n.isEntry && (
+                        <g transform="translate(0, -28)">
+                          <rect x="-24" y="-6" width="48" height="12" fill="#E63946" stroke="#0D1F18" strokeWidth="1.5" />
+                          <text x="0" y="3" textAnchor="middle" fill="#FFFFFF" fontSize="6" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                            ENTRY μ
+                          </text>
+                        </g>
+                      )}
                     </g>
                   );
                 })}
 
-                {/* Slow Tortoise Marker */}
-                {(() => {
-                  const angle = (2 * Math.PI * slowPos) / trackCount;
-                  const x = 200 + 145 * Math.cos(angle);
-                  const y = 80 + 52 * Math.sin(angle);
-                  return (
-                    <g transform={`translate(${x - 12}, ${y - 36})`} className="transition-all duration-300">
-                      <rect x="-4" y="-2" width="32" height="18" fill="#F2E8CF" stroke="#0D1F18" strokeWidth="2" />
-                      <text x="12" y="11" textAnchor="middle" fill="#2A9D8F" fontSize="8" fontFamily="'Press Start 2P', monospace">
-                        1x
+                {/* Collision Animation (Starburst & Banner) */}
+                {step.isCollision && (
+                  <g transform={`translate(${slowNode.x}, ${slowNode.y})`}>
+                    <PixelCollisionBurst size={56} x={-28} y={-28} />
+                    <g transform="translate(0, -48)">
+                      <rect x="-65" y="-12" width="130" height="24" fill="#0D1F18" />
+                      <rect x="-67" y="-14" width="130" height="24" fill="#FAF5E6" stroke="#E63946" strokeWidth="2.5" />
+                      <text x="0" y="2" textAnchor="middle" fill="#E63946" fontSize="7.5" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                        ★ COLLISION! ★
                       </text>
                     </g>
-                  );
-                })()}
+                  </g>
+                )}
 
-                {/* Fast Hare Marker */}
-                {(() => {
-                  const angle = (2 * Math.PI * fastPos) / trackCount;
-                  const x = 200 + 145 * Math.cos(angle);
-                  const y = 80 + 52 * Math.sin(angle);
-                  return (
-                    <g transform={`translate(${x - 12}, ${y + 20})`} className="transition-all duration-300">
-                      <rect x="-4" y="-2" width="32" height="18" fill="#F2E8CF" stroke="#0D1F18" strokeWidth="2" />
-                      <text x="12" y="11" textAnchor="middle" fill="#E76F51" fontSize="8" fontFamily="'Press Start 2P', monospace">
-                        2x
-                      </text>
-                    </g>
-                  );
-                })()}
+                {/* Slow Tortoise Marker (1x) */}
+                {slowNode && (
+                  <g
+                    transform={`translate(${
+                      step.isCollision
+                        ? slowNode.x - 22
+                        : step.slowNode === step.fastNode
+                        ? slowNode.x - 18
+                        : slowNode.x
+                    }, ${slowNode.y - 42})`}
+                    className="transition-all duration-300"
+                  >
+                    <PixelTortoiseSprite size={26} x={-13} y={-26} />
+                    <rect x="-26" y="2" width="52" height="14" fill="#0D1F18" />
+                    <rect x="-28" y="0" width="52" height="14" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="1.5" />
+                    <text x="-2" y="10" textAnchor="middle" fill="#FFFFFF" fontSize="6" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                      SLOW 1x
+                    </text>
+                  </g>
+                )}
 
-                {/* Collision Starburst */}
-                {collision && (
-                  <g transform="translate(200, 80)">
-                    <rect x="-80" y="-16" width="160" height="32" fill="#FAF5E6" stroke="#0D1F18" strokeWidth="3" />
-                    <text x="0" y="5" textAnchor="middle" fill="#E63946" fontSize="10" fontFamily="'Press Start 2P', monospace">
-                      ★ COLLISION! ★
+                {/* Fast Hare Marker (2x) */}
+                {fastNode && (
+                  <g
+                    transform={`translate(${
+                      step.isCollision
+                        ? fastNode.x + 22
+                        : step.slowNode === step.fastNode
+                        ? fastNode.x + 18
+                        : fastNode.x
+                    }, ${
+                      // When on different nodes, if Hare is at top node D, position below; otherwise position above
+                      step.slowNode !== step.fastNode && step.fastNode === 3
+                        ? fastNode.y + 26
+                        : fastNode.y - 42
+                    })`}
+                    className="transition-all duration-300"
+                  >
+                    <PixelHareSprite size={26} x={-13} y={step.slowNode !== step.fastNode && step.fastNode === 3 ? 14 : -26} />
+                    <rect x="-26" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? -2 : 2} width="52" height="14" fill="#0D1F18" />
+                    <rect x="-28" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? -4 : 0} width="52" height="14" fill="#E76F51" stroke="#0D1F18" strokeWidth="1.5" />
+                    <text x="-2" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? 6 : 10} textAnchor="middle" fill="#FFFFFF" fontSize="6" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                      FAST 2x
                     </text>
                   </g>
                 )}
               </svg>
+            </div>
+
+            {/* Step Explanation Dialogue Ribbon */}
+            <div className="mt-3 p-2.5 bg-gb-cream border-2 border-gb-ink text-gb-ink font-vt323 text-lg leading-tight flex items-center justify-between gap-2 shadow-pixel-sm">
+              <div className="flex items-center gap-2">
+                <span className="font-pixel text-[8.5px] px-1.5 py-0.5 bg-gb-forest text-gb-pale border border-gb-ink">
+                  {step.phaseLabel}
+                </span>
+                <span className="text-base sm:text-lg font-bold">
+                  {step.note}
+                </span>
+              </div>
+            </div>
+
+            {/* Mini Player Controls */}
+            <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gb-olive/40 font-pixel text-[8.5px]">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setIsPlaying(!isPlaying);
+                  }}
+                  className="px-2.5 py-1 bg-gb-olive text-gb-cream border border-gb-ink hover:bg-gb-leaf shadow-pixel-sm"
+                >
+                  {isPlaying ? '⏸ PAUSE' : '▶ PLAY'}
+                </button>
+                <button
+                  onClick={handleStepForward}
+                  className="px-2.5 py-1 bg-gb-surface text-gb-ink border border-gb-ink hover:bg-white shadow-pixel-sm"
+                >
+                  STEP ▶
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="px-2 py-1 bg-gb-forest text-gb-pale border border-gb-ink hover:bg-gb-olive shadow-pixel-sm"
+                >
+                  ⟳ RESET
+                </button>
+              </div>
+
+              <div className="text-gb-pale text-[8px]">
+                TURN: #{step.turn} / {DEMO_STEPS.length - 1} | SPEED: 1x (Slow) vs 2x (Fast)
+              </div>
             </div>
           </div>
         </div>
