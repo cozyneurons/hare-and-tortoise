@@ -120,7 +120,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
   return (
     <div className="relative w-full h-full min-h-[380px] flex flex-col justify-center items-center bg-gb-forest border-4 border-gb-ink shadow-pixel rounded-none overflow-hidden select-none">
       {/* Lab Monitor Frame Header */}
-      <div className="absolute top-0 left-0 right-0 h-7 bg-gb-olive border-b-3 border-gb-ink px-3 flex items-center justify-between text-[9px] font-pixel text-gb-cream z-10 shadow-sm">
+      <div className="absolute top-0 left-0 right-0 h-9 bg-gb-olive border-b-3 border-gb-ink px-3 flex items-center justify-between text-xs sm:text-[13px] font-pixel text-gb-cream z-10 shadow-sm font-bold">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 bg-retro-success border border-gb-ink animate-pulse" />
           <span className="font-bold tracking-wide">RESEARCH MONITOR // V-64</span>
@@ -129,7 +129,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           <span className="text-gb-pale">
             MODE: {mode.toUpperCase().replace('-', ' ')}
           </span>
-          <span className="px-1.5 py-0.2 bg-gb-forest border border-gb-ink text-[8px] text-hare">
+          <span className="px-2 py-0.5 bg-gb-forest border border-gb-ink text-xs text-hare font-bold">
             LIVE LCD
           </span>
         </div>
@@ -137,8 +137,8 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
       {/* Array tape for Find Duplicate Mode (Styled as Poké-Ball Item Belt) */}
       {mode === 'find-duplicate' && numsArray.length > 0 && (
-        <div className="absolute top-9 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-1 p-2 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
-          <div className="font-pixel text-[9px] text-gb-ink font-bold">
+        <div className="absolute top-11 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-1 p-2 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
+          <div className="font-pixel text-xs sm:text-[13px] text-gb-ink font-bold">
             POKÉ-BELT (ARRAY): <span className="text-hare">SLOT[i] &rarr; VAL</span>
           </div>
           <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
@@ -150,7 +150,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               return (
                 <div
                   key={`belt-${idx}`}
-                  className={`flex flex-col items-center px-1.5 py-0.5 border-2 border-gb-ink font-pixel text-[9px] transition-all ${
+                  className={`flex flex-col items-center px-2 py-0.5 border-2 border-gb-ink font-pixel text-xs transition-all ${
                     isDup
                       ? 'bg-retro-warning text-gb-ink font-bold animate-bounce-pixel'
                       : isSlow && isFast
@@ -162,7 +162,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
                       : 'bg-gb-surface text-gb-ink'
                   }`}
                 >
-                  <span className="text-[7px] opacity-75">#{idx}</span>
+                  <span className="text-[9px] opacity-75">#{idx}</span>
                   <span className="font-bold">{val}</span>
                 </div>
               );
@@ -174,7 +174,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
       {/* Main SVG Visualization Screen */}
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-full max-h-[500px] select-none mt-7 bg-gb-cream"
+        className="w-full h-full max-h-[500px] select-none mt-9 bg-gb-cream"
         shapeRendering="crispEdges"
       >
         <defs>
@@ -348,9 +348,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               {/* Badges: Cycle Entry / Middle / Duplicate */}
               {isCycleEntry && (
                 <g transform="translate(0, -36)">
-                  <rect x="-33" y="-8" width="66" height="16" fill="#0D1F18" />
-                  <rect x="-35" y="-10" width="66" height="16" fill="#E63946" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                  <rect x="-35" y="-9" width="70" height="18" fill="#0D1F18" />
+                  <rect x="-37" y="-11" width="70" height="18" fill="#E63946" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="3" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     ENTRY μ
                   </text>
                 </g>
@@ -358,9 +358,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
               {isMiddle && (
                 <g transform="translate(0, -36)">
-                  <rect x="-35" y="-8" width="70" height="16" fill="#0D1F18" />
-                  <rect x="-37" y="-10" width="70" height="16" fill="#38B000" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                  <rect x="-37" y="-9" width="74" height="18" fill="#0D1F18" />
+                  <rect x="-39" y="-11" width="74" height="18" fill="#38B000" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="3" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     MIDDLE!
                   </text>
                 </g>
@@ -368,9 +368,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
               {isDup && (
                 <g transform="translate(0, -36)">
-                  <rect x="-38" y="-8" width="76" height="16" fill="#0D1F18" />
-                  <rect x="-40" y="-10" width="76" height="16" fill="#E9C46A" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="2" fill="#0D1F18" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                  <rect x="-40" y="-9" width="80" height="18" fill="#0D1F18" />
+                  <rect x="-42" y="-11" width="80" height="18" fill="#E9C46A" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="3" fill="#0D1F18" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     DUPE VAL!
                   </text>
                 </g>
@@ -387,9 +387,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             
             {/* Collision Dialogue Box */}
             <g transform="translate(0, -56)">
-              <rect x="-70" y="-12" width="140" height="26" fill="#0D1F18" />
-              <rect x="-72" y="-14" width="140" height="26" fill="#FAF5E6" stroke="#E63946" strokeWidth="3" />
-              <text x="0" y="3" textAnchor="middle" fill="#E63946" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+              <rect x="-76" y="-14" width="152" height="28" fill="#0D1F18" />
+              <rect x="-78" y="-16" width="152" height="28" fill="#FAF5E6" stroke="#E63946" strokeWidth="3" />
+              <text x="0" y="3" textAnchor="middle" fill="#E63946" fontSize="9" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                 ★ POINTERS MET! ★
               </text>
             </g>
@@ -407,9 +407,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             {/* Native SVG Tortoise Sprite */}
             <PixelTortoiseSprite size={30} x={-15} y={-30} />
             {/* Tortoise Label Tag */}
-            <rect x="-30" y="2" width="60" height="16" fill="#0D1F18" />
-            <rect x="-32" y="0" width="60" height="16" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
-            <text x="-2" y="11" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+            <rect x="-33" y="2" width="66" height="18" fill="#0D1F18" />
+            <rect x="-35" y="0" width="66" height="18" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y="12" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               SLOW 1x
             </text>
           </g>
@@ -426,9 +426,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
             {/* Native SVG Hare Sprite */}
             <PixelHareSprite size={30} x={-15} y={areBothOnSameNode ? -30 : 18} />
             {/* Hare Label Tag */}
-            <rect x="-30" y={areBothOnSameNode ? 2 : 0} width="60" height="16" fill="#0D1F18" />
-            <rect x="-32" y={areBothOnSameNode ? 0 : -2} width="60" height="16" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
-            <text x="-2" y={areBothOnSameNode ? 11 : 9} textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+            <rect x="-33" y={areBothOnSameNode ? 2 : 0} width="66" height="18" fill="#0D1F18" />
+            <rect x="-35" y={areBothOnSameNode ? 0 : -2} width="66" height="18" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y={areBothOnSameNode ? 12 : 10} textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               FAST 2x
             </text>
           </g>

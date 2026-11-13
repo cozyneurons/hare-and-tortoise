@@ -253,12 +253,12 @@ export const ArenaWorkspace: React.FC = () => {
           </div>
 
           {/* Quick Simulation Statistics Panel (Styled as Laboratory Bench Data) */}
-          <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel font-pixel text-[9px] text-gb-cream">
+          <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel font-pixel text-xs sm:text-[13px] text-gb-cream">
             <div className="text-gb-pale font-bold mb-2.5 border-b-2 border-gb-ink pb-1 flex justify-between items-center">
               <span>RESEARCH DATA</span>
-              <span className="text-hare text-[8px]">ACTIVE STATS</span>
+              <span className="text-hare text-xs font-bold">ACTIVE STATS</span>
             </div>
-            <div className="space-y-2 font-vt323 text-xl">
+            <div className="space-y-2 font-vt323 text-2xl">
               <div className="flex justify-between items-center">
                 <span className="text-gb-pale">TOTAL TURNS:</span>
                 <span className="text-white font-bold">{totalSteps}</span>

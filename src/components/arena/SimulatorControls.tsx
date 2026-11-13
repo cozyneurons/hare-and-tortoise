@@ -44,11 +44,11 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
     <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel text-gb-cream select-none">
       {/* Simulation Progress (Styled as Pokémon HP/XP Progress Gauge) */}
       <div className="mb-3">
-        <div className="flex justify-between items-center text-xs font-vt323 text-gb-pale mb-1">
-          <span className="font-pixel text-[9px] text-gb-cream">
+        <div className="flex justify-between items-center text-sm font-vt323 text-gb-pale mb-1.5">
+          <span className="font-pixel text-xs sm:text-[13px] text-gb-cream font-bold">
             TURN: {Math.max(0, currentStepIndex)} / {Math.max(0, totalSteps - 1)}
           </span>
-          <span className="font-pixel text-[9px] text-hare">
+          <span className="font-pixel text-xs sm:text-[13px] text-hare font-bold">
             PROGRESS: {percent}%
           </span>
         </div>
@@ -132,7 +132,7 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
 
         {/* Speed Gear Controls */}
         <div className="flex items-center gap-1 bg-gb-forest p-1 border-2 border-gb-ink">
-          <span className="font-pixel text-[8px] text-gb-pale px-1">SPD:</span>
+          <span className="font-pixel text-xs text-gb-pale px-1.5 font-bold">SPD:</span>
           {SPEED_OPTIONS.map((spd) => (
             <button
               key={`spd-${spd}`}
@@ -140,9 +140,9 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
                 sound.playClick();
                 onSpeedChange(spd);
               }}
-              className={`px-1.5 py-1 font-pixel text-[8px] transition-all ${
+              className={`px-2 py-1 font-pixel text-xs font-bold transition-all ${
                 speed === spd
-                  ? 'bg-gb-cream text-gb-ink font-bold border border-gb-ink'
+                  ? 'bg-gb-cream text-gb-ink border border-gb-ink'
                   : 'text-gb-pale hover:text-white'
               }`}
             >
@@ -156,7 +156,7 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
           {/* Sound Mute */}
           <button
             onClick={onMuteToggle}
-            className={`p-1.5 font-pixel text-[9px] border-2 border-gb-ink ${
+            className={`px-2.5 py-1.5 font-pixel text-xs font-bold border-2 border-gb-ink ${
               isMuted ? 'bg-gb-forest text-gb-pale' : 'bg-gb-pale text-gb-ink'
             }`}
           >
@@ -166,7 +166,7 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
           {/* Keyboard Guide Toggle */}
           <button
             onClick={() => setShowKeyGuide(!showKeyGuide)}
-            className="px-2 py-1 font-pixel text-[8px] bg-gb-olive border-2 border-gb-ink text-gb-cream hover:bg-gb-leaf"
+            className="px-2.5 py-1.5 font-pixel text-xs font-bold bg-gb-olive border-2 border-gb-ink text-gb-cream hover:bg-gb-leaf"
           >
             KEYS?
           </button>
@@ -175,8 +175,8 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
 
       {/* Retro Keyboard Guide Popup */}
       {showKeyGuide && (
-        <div className="rpg-box p-3 mt-3 border-2 border-gb-ink text-gb-ink font-vt323 text-lg leading-tight">
-          <div className="font-pixel text-[9px] text-hare mb-1 border-b border-gb-ink pb-0.5">
+        <div className="rpg-box p-3.5 mt-3 border-2 border-gb-ink text-gb-ink font-vt323 text-xl leading-tight">
+          <div className="font-pixel text-xs text-hare mb-1.5 border-b border-gb-ink pb-1 font-bold">
             HANDHELD CONTROLLER SHORTCUTS:
           </div>
           <div className="grid grid-cols-2 gap-x-4">

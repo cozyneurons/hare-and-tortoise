@@ -207,16 +207,16 @@ export const ChallengeMode: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 select-none">
       {/* Top Trainer Battle HUD */}
-      <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="rpg-box-dark p-4 sm:p-5 border-4 border-gb-ink shadow-pixel mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-1 bg-gb-cream border-2 border-gb-ink">
-            <PixelTortoiseSprite size={28} />
+          <div className="p-1.5 bg-gb-cream border-2 border-gb-ink">
+            <PixelTortoiseSprite size={32} />
           </div>
           <div>
-            <div className="font-pixel text-[9px] text-gb-pale">
+            <div className="font-pixel text-xs text-gb-pale font-bold">
               TRAINER BATTLE ARENA
             </div>
-            <div className="font-pixel text-sm text-gb-cream">
+            <div className="font-pixel text-base sm:text-lg text-gb-cream font-bold mt-0.5">
               XP: <span className="text-hare">{score.toLocaleString()}</span>
             </div>
           </div>
@@ -224,20 +224,20 @@ export const ChallengeMode: React.FC = () => {
 
         {/* Streak & Difficulty Badges */}
         <div className="flex items-center gap-3">
-          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-gb-cream">
+          <div className="px-3 py-1.5 bg-gb-forest border-2 border-gb-ink font-pixel text-xs text-gb-cream font-bold">
             BATTLES: {questionsAnswered}
           </div>
-          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-retro-warning">
+          <div className="px-3 py-1.5 bg-gb-forest border-2 border-gb-ink font-pixel text-xs text-retro-warning font-bold">
             🔥 STREAK: {streak}x
           </div>
-          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-gb-pale">
+          <div className="px-3 py-1.5 bg-gb-forest border-2 border-gb-ink font-pixel text-xs text-gb-pale font-bold">
             RECORD: {highestStreak}
           </div>
         </div>
       </div>
 
       {/* Difficulty Switcher (Gym Tiers) */}
-      <div className="flex items-center gap-2 mb-6 font-pixel text-[9px]">
+      <div className="flex items-center gap-2.5 mb-6 font-pixel text-xs font-bold">
         <span className="text-gb-pale mr-1">GYM TIER:</span>
         {(['beginner', 'intermediate', 'advanced'] as Difficulty[]).map((diff) => (
           <button
@@ -248,7 +248,7 @@ export const ChallengeMode: React.FC = () => {
               setSelectedAnswer(null);
               setIsAnswered(false);
             }}
-            className={`px-2.5 py-1.5 border-2 border-gb-ink transition-all uppercase ${
+            className={`px-3.5 py-2 border-2 border-gb-ink transition-all uppercase ${
               difficulty === diff
                 ? 'bg-gb-cream text-gb-ink font-bold shadow-pixel-sm'
                 : 'bg-gb-olive text-gb-cream hover:bg-gb-leaf'
@@ -264,14 +264,14 @@ export const ChallengeMode: React.FC = () => {
         <div className="rpg-box-dark p-4 sm:p-6 border-4 border-gb-ink shadow-pixel mb-6">
           {/* Opponent Card (Top Right) */}
           <div className="flex justify-end mb-6">
-            <div className="rpg-box p-3 border-2 border-gb-ink shadow-pixel-sm min-w-[240px]">
-              <div className="flex justify-between items-center font-pixel text-[9px] border-b border-gb-ink pb-1 mb-1">
+            <div className="rpg-box p-3.5 border-2 border-gb-ink shadow-pixel-sm min-w-[260px]">
+              <div className="flex justify-between items-center font-pixel text-xs border-b border-gb-ink pb-1.5 mb-1.5">
                 <span className="font-bold">WILD ALGORITHM</span>
-                <span className="text-hare">:L{difficulty === 'beginner' ? '25' : difficulty === 'intermediate' ? '50' : '85'}</span>
+                <span className="text-hare font-bold">:L{difficulty === 'beginner' ? '25' : difficulty === 'intermediate' ? '50' : '85'}</span>
               </div>
-              <div className="flex items-center gap-2 font-pixel text-[8px] text-gb-ink">
+              <div className="flex items-center gap-2 font-pixel text-xs text-gb-ink font-bold">
                 <span>HP:</span>
-                <div className="flex-1 h-2.5 bg-gb-forest border border-gb-ink p-0.5">
+                <div className="flex-1 h-3 bg-gb-forest border border-gb-ink p-0.5">
                   <div className="h-full bg-retro-success w-full" />
                 </div>
               </div>
@@ -281,18 +281,18 @@ export const ChallengeMode: React.FC = () => {
           {/* Player Card & Sprites (Bottom Left) */}
           <div className="flex items-end justify-between mb-4">
             <div className="flex items-center gap-3">
-              <PixelTortoiseSprite size={44} className="animate-bounce-pixel" />
-              <PixelHareSprite size={44} className="animate-bounce-pixel" />
+              <PixelTortoiseSprite size={48} className="animate-bounce-pixel" />
+              <PixelHareSprite size={48} className="animate-bounce-pixel" />
             </div>
 
-            <div className="rpg-box p-3 border-2 border-gb-ink shadow-pixel-sm min-w-[240px]">
-              <div className="flex justify-between items-center font-pixel text-[9px] border-b border-gb-ink pb-1 mb-1">
+            <div className="rpg-box p-3.5 border-2 border-gb-ink shadow-pixel-sm min-w-[260px]">
+              <div className="flex justify-between items-center font-pixel text-xs border-b border-gb-ink pb-1.5 mb-1.5">
                 <span className="font-bold">CHASE &amp; LOOP</span>
-                <span className="text-tortoise">:L{Math.min(99, 20 + streak * 5)}</span>
+                <span className="text-tortoise font-bold">:L{Math.min(99, 20 + streak * 5)}</span>
               </div>
-              <div className="flex items-center gap-2 font-pixel text-[8px] text-gb-ink">
+              <div className="flex items-center gap-2 font-pixel text-xs text-gb-ink font-bold">
                 <span>EXP:</span>
-                <div className="flex-1 h-2.5 bg-gb-forest border border-gb-ink p-0.5">
+                <div className="flex-1 h-3 bg-gb-forest border border-gb-ink p-0.5">
                   <div className="h-full bg-hare" style={{ width: `${Math.min(100, streak * 20)}%` }} />
                 </div>
               </div>
@@ -300,22 +300,22 @@ export const ChallengeMode: React.FC = () => {
           </div>
 
           {/* Question Prompt Dialogue Box */}
-          <div className="rpg-box p-4 border-2 border-gb-ink mb-4">
-            <h3 className="font-pixel text-xs text-gb-ink mb-1.5 leading-snug">
+          <div className="rpg-box p-4 sm:p-5 border-2 border-gb-ink mb-4">
+            <h3 className="font-pixel text-sm sm:text-base text-gb-ink mb-2 leading-snug font-bold">
               {currentQuestion.prompt}
             </h3>
-            <p className="font-vt323 text-xl text-gb-forest leading-tight">
+            <p className="font-vt323 text-2xl text-gb-forest leading-snug font-bold">
               &ldquo;{currentQuestion.details}&rdquo;
             </p>
           </div>
 
           {/* 4-Quadrant Battle Action Menu */}
-          <div className="rpg-panel-cream p-4 border-2 border-gb-ink">
-            <div className="font-pixel text-[9px] text-gb-ink border-b-2 border-gb-ink pb-2 mb-3">
+          <div className="rpg-panel-cream p-4 sm:p-5 border-2 border-gb-ink">
+            <div className="font-pixel text-xs sm:text-sm text-gb-ink border-b-2 border-gb-ink pb-2 mb-3 font-bold">
               WHAT WILL TRAINER DO?
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {currentQuestion.options.map((option, idx) => {
                 const isSelected = selectedAnswer === option;
                 const isOptionCorrect = option === currentQuestion.correctAnswer;
@@ -336,10 +336,10 @@ export const ChallengeMode: React.FC = () => {
                     key={`opt-${idx}`}
                     disabled={isAnswered}
                     onClick={() => handleSelectOption(option)}
-                    className={`p-3 border-2 font-pixel text-[10px] text-left transition-all flex items-center justify-between ${btnClass}`}
+                    className={`p-3.5 border-2 font-pixel text-xs sm:text-[13px] text-left transition-all flex items-center justify-between font-bold ${btnClass}`}
                   >
                     <span>
-                      <span className="text-hare mr-1.5">▶</span>
+                      <span className="text-hare mr-2">▶</span>
                       {String(option)}
                     </span>
                     {isAnswered && isOptionCorrect && <span>★</span>}
@@ -351,25 +351,25 @@ export const ChallengeMode: React.FC = () => {
 
           {/* Post-Battle Dialogue Box */}
           {isAnswered && (
-            <div className="rpg-box p-4 border-2 border-gb-ink mt-4">
-              <div className="font-pixel text-[10px] mb-1 font-bold">
+            <div className="rpg-box p-4 sm:p-5 border-2 border-gb-ink mt-4">
+              <div className="font-pixel text-xs sm:text-sm mb-1.5 font-bold">
                 {isCorrect ? (
                   <span className="text-retro-success">★ IT'S SUPER EFFECTIVE! ★</span>
                 ) : (
                   <span className="text-retro-error">TRAINER'S GUESS MISSED...</span>
                 )}
               </div>
-              <p className="font-vt323 text-xl text-gb-ink leading-tight mb-2">
+              <p className="font-vt323 text-2xl text-gb-ink leading-snug mb-2 font-bold">
                 {currentQuestion.explanation}
               </p>
-              <div className="p-2 bg-gb-surface border border-gb-ink font-vt323 text-lg text-gb-forest">
+              <div className="p-2.5 bg-gb-surface border border-gb-ink font-vt323 text-xl text-gb-forest">
                 LOGIC: {currentQuestion.mathExplanation}
               </div>
 
-              <div className="mt-3 flex justify-end">
+              <div className="mt-3.5 flex justify-end">
                 <button
                   onClick={handleNextQuestion}
-                  className="pixel-btn bg-hare text-white hover:bg-hare-light"
+                  className="pixel-btn bg-hare text-white hover:bg-hare-light text-xs font-bold"
                 >
                   NEXT BATTLE ▶
                 </button>

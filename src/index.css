@@ -76,8 +76,8 @@
 /* Classic Game Boy Push Button */
 .pixel-btn {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 8px 14px;
+  font-size: 11px;
+  padding: 9px 15px;
   background-color: #A7C957;
   color: #0D1F18;
   border: 3px solid #0D1F18;

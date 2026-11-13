@@ -171,7 +171,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <PixelTree size={36} />
           <PixelTree size={36} />
         </div>
-        <div className="text-center font-pixel text-[10px] text-gb-pale tracking-widest uppercase">
+        <div className="text-center font-pixel text-xs sm:text-[13px] text-gb-pale tracking-widest uppercase font-bold">
           ROUTE 01 // FLOYD'S MEADOW
         </div>
         <div className="flex gap-2">
@@ -182,7 +182,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Retro Title Plaque */}
       <div className="rpg-box-dark p-6 sm:p-8 mb-6 text-center border-4 border-gb-ink shadow-pixel">
-        <div className="inline-block px-3 py-1 bg-gb-leaf border-2 border-gb-ink text-gb-cream font-pixel text-[10px] mb-3">
+        <div className="inline-block px-3 py-1.5 bg-gb-leaf border-2 border-gb-ink text-gb-cream font-pixel text-xs sm:text-[13px] font-bold mb-3">
           ★ THE LEGENDARY HANDHELD SIMULATOR ★
         </div>
 
@@ -206,10 +206,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           >
             <div>
               <div className="flex items-center justify-between border-b-2 border-gb-ink pb-1.5 mb-2.5">
-                <span className="font-pixel text-[10px] text-hare font-bold">
+                <span className="font-pixel text-xs sm:text-[13px] text-hare font-bold">
                   PROF. FLOYD
                 </span>
-                <span className="font-pixel text-[8px] text-gb-ink opacity-60">
+                <span className="font-pixel text-[10px] sm:text-xs text-gb-ink font-bold opacity-75">
                   MSG {currentLineIdx + 1}/{dialogueLines.length} [CLICK TO ADVANCE]
                 </span>
               </div>
@@ -229,16 +229,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* Header Telemetry */}
             <div className="flex items-center justify-between border-b-2 border-gb-ink pb-2 mb-3">
               <div className="flex items-center gap-3">
-                <span className="font-pixel text-[10px] text-gb-pale">OVERWORLD PATROL:</span>
-                <span className="flex items-center gap-1 font-vt323 text-lg text-tortoise">
-                  <PixelTortoiseSprite size={18} /> SLOW (1x)
+                <span className="font-pixel text-xs sm:text-[13px] text-gb-pale font-bold">OVERWORLD PATROL:</span>
+                <span className="flex items-center gap-1 font-vt323 text-xl text-tortoise font-bold">
+                  <PixelTortoiseSprite size={20} /> SLOW (1x)
                 </span>
-                <span className="text-gb-pale">vs</span>
-                <span className="flex items-center gap-1 font-vt323 text-lg text-hare">
-                  <PixelHareSprite size={18} /> FAST (2x)
+                <span className="text-gb-pale font-bold">vs</span>
+                <span className="flex items-center gap-1 font-vt323 text-xl text-hare font-bold">
+                  <PixelHareSprite size={20} /> FAST (2x)
                 </span>
               </div>
-              <div className="font-pixel text-[9px] text-gb-cream">
+              <div className="font-pixel text-xs sm:text-[13px] text-gb-cream font-bold">
                 {step.isCollision ? (
                   <span className="text-retro-error animate-blink font-bold">★ COLLISION! ★</span>
                 ) : (
@@ -461,44 +461,44 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Step Explanation Dialogue Ribbon */}
-            <div className="mt-3 p-2.5 bg-gb-cream border-2 border-gb-ink text-gb-ink font-vt323 text-lg leading-tight flex items-center justify-between gap-2 shadow-pixel-sm">
-              <div className="flex items-center gap-2">
-                <span className="font-pixel text-[8.5px] px-1.5 py-0.5 bg-gb-forest text-gb-pale border border-gb-ink">
+            <div className="mt-3 p-3 bg-gb-cream border-2 border-gb-ink text-gb-ink font-vt323 text-xl leading-tight flex items-center justify-between gap-2 shadow-pixel-sm">
+              <div className="flex items-center gap-2.5">
+                <span className="font-pixel text-xs px-2 py-0.5 bg-gb-forest text-gb-pale border border-gb-ink font-bold">
                   {step.phaseLabel}
                 </span>
-                <span className="text-base sm:text-lg font-bold">
+                <span className="text-lg sm:text-xl font-bold">
                   {step.note}
                 </span>
               </div>
             </div>
 
             {/* Mini Player Controls */}
-            <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gb-olive/40 font-pixel text-[8.5px]">
+            <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gb-olive/40 font-pixel text-xs">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
                     sound.playClick();
                     setIsPlaying(!isPlaying);
                   }}
-                  className="px-2.5 py-1 bg-gb-olive text-gb-cream border border-gb-ink hover:bg-gb-leaf shadow-pixel-sm"
+                  className="px-3 py-1.5 bg-gb-olive text-gb-cream border border-gb-ink hover:bg-gb-leaf shadow-pixel-sm font-bold"
                 >
                   {isPlaying ? '⏸ PAUSE' : '▶ PLAY'}
                 </button>
                 <button
                   onClick={handleStepForward}
-                  className="px-2.5 py-1 bg-gb-surface text-gb-ink border border-gb-ink hover:bg-white shadow-pixel-sm"
+                  className="px-3 py-1.5 bg-gb-surface text-gb-ink border border-gb-ink hover:bg-white shadow-pixel-sm font-bold"
                 >
                   STEP ▶
                 </button>
                 <button
                   onClick={handleReset}
-                  className="px-2 py-1 bg-gb-forest text-gb-pale border border-gb-ink hover:bg-gb-olive shadow-pixel-sm"
+                  className="px-2.5 py-1.5 bg-gb-forest text-gb-pale border border-gb-ink hover:bg-gb-olive shadow-pixel-sm font-bold"
                 >
                   ⟳ RESET
                 </button>
               </div>
 
-              <div className="text-gb-pale text-[8px]">
+              <div className="text-gb-pale text-xs font-bold">
                 TURN: #{step.turn} / {DEMO_STEPS.length - 1} | SPEED: 1x (Slow) vs 2x (Fast)
               </div>
             </div>
@@ -508,9 +508,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Right Column (4 cols): Classic RPG Start / Action Menu */}
         <div className="lg:col-span-4 flex flex-col gap-3">
           <div className="rpg-box p-4 border-4 border-gb-ink shadow-pixel">
-            <div className="font-pixel text-[11px] text-gb-ink border-b-2 border-gb-ink pb-2 mb-3 flex items-center justify-between">
+            <div className="font-pixel text-xs sm:text-[13px] text-gb-ink border-b-2 border-gb-ink pb-2 mb-3 flex items-center justify-between font-bold">
               <span>START MENU</span>
-              <span className="text-[9px] text-hare">SELECT</span>
+              <span className="text-xs text-hare">SELECT</span>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -550,7 +550,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Overworld Signboard snippet */}
-            <div className="mt-4 pt-3 border-t-2 border-dashed border-gb-ink text-gb-ink font-vt323 text-lg leading-tight flex items-start gap-2">
+            <div className="mt-4 pt-3 border-t-2 border-dashed border-gb-ink text-gb-ink font-vt323 text-xl leading-tight flex items-start gap-2">
               <PixelSignpost size={24} />
               <p>
                 <strong>SIGNBOARD:</strong> "Floyd's Theorem guarantees Tortoise and Hare will meet inside any cycle in at most λ turns."
@@ -559,12 +559,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Quick Handheld Specs */}
-          <div className="rpg-box-dark p-3.5 border-4 border-gb-ink text-gb-cream font-pixel text-[9px] space-y-2">
-            <div className="flex justify-between border-b border-gb-olive pb-1">
+          <div className="rpg-box-dark p-3.5 border-4 border-gb-ink text-gb-cream font-pixel text-xs sm:text-[13px] space-y-2 font-bold">
+            <div className="flex justify-between border-b border-gb-olive pb-1.5">
               <span className="text-gb-pale">ENGINE:</span>
               <span>FLOYD-2X-GBC</span>
             </div>
-            <div className="flex justify-between border-b border-gb-olive pb-1">
+            <div className="flex justify-between border-b border-gb-olive pb-1.5">
               <span className="text-gb-pale">TIME COMPLEXITY:</span>
               <span className="text-retro-warning">O(N)</span>
             </div>

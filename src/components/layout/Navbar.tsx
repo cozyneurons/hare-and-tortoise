@@ -62,11 +62,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="font-pixel text-sm sm:text-base text-[#FAF7EE] tracking-tight group-hover:text-gb-pale transition-colors font-bold">
                 CHASE<span className="text-hare">::</span>LOOP
               </span>
-              <span className="text-[9px] font-pixel px-1.5 py-0.5 bg-[#282E36] border border-[#0B0E11] text-[#A7C957] hidden sm:inline-block">
+              <span className="text-xs font-pixel px-2 py-0.5 bg-[#282E36] border border-[#0B0E11] text-[#A7C957] font-bold hidden sm:inline-block">
                 GBC
               </span>
             </div>
-            <div className="text-xs sm:text-[13px] font-vt323 text-[#A8B2BD] tracking-wider hidden sm:block leading-none mt-1">
+            <div className="text-sm sm:text-base font-vt323 text-[#A8B2BD] tracking-wider hidden sm:block leading-none mt-1 font-bold">
               ★ TWO-POINTER HANDHELD LAB ★
             </div>
           </div>
@@ -138,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               sound.playClick();
               onToggleDmgMode();
             }}
-            className="px-2.5 py-1.5 font-pixel text-[9px] bg-[#252A30] text-[#D8DCE2] border-2 border-[#0B0E11]"
+            className="px-2.5 py-1.5 font-pixel text-xs bg-[#252A30] text-[#D8DCE2] border-2 border-[#0B0E11] font-bold"
             title="Palette Mode"
           >
             {isDmgMode ? 'DMG' : 'GBC'}
@@ -147,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => {
               onToggleMute();
             }}
-            className="px-2.5 py-1.5 font-pixel text-[9px] bg-[#252A30] text-[#D8DCE2] border-2 border-[#0B0E11]"
+            className="px-2.5 py-1.5 font-pixel text-xs bg-[#252A30] text-[#D8DCE2] border-2 border-[#0B0E11] font-bold"
             title="Sound"
           >
             {isMuted ? '🔇' : '🔊'}
@@ -164,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile RPG Start Menu Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-gb-cream border-t-3 border-[#0B0E11] p-3 space-y-1.5 text-gb-ink font-pixel text-xs shadow-pixel">
-          <div className="text-[9px] text-gb-olive font-bold tracking-wider mb-2 pb-1 border-b border-[#0B0E11]/30">
+          <div className="text-xs text-gb-olive font-bold tracking-wider mb-2 pb-1 border-b border-[#0B0E11]/30">
             START MENU // SELECT MODULE:
           </div>
           {navLinks.map((link) => {
