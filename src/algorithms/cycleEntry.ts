@@ -30,7 +30,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
       title: 'Empty List',
       explanation: 'Head is null. No cycle entry exists.',
       detailedReasoning: 'No nodes to traverse.',
-      codeLine: { python: 2, cpp: 2, java: 2 },
+      codeLine: { python: 4, cpp: 3, java: 3 },
       variables: { slow: null, fast: null },
     });
     return {
@@ -62,7 +62,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
       title: 'Phase 1: Detection Start',
       explanation: 'Tortoise (Slow, 1x) and Hare (Fast, 2x) placed at Head.',
       detailedReasoning: 'We must first determine if a cycle exists and locate the meeting point.',
-      codeLine: { python: 3, cpp: 3, java: 3 },
+      codeLine: { python: 6, cpp: 6, java: 6 },
       variables: { slow: 0, fast: 0, phase: 'Phase 1: Detection' },
       highlightedNodes: [0],
     });
@@ -90,7 +90,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
           title: 'No Cycle Found',
           explanation: 'Fast reached null. Without a cycle, there is no entry point.',
           detailedReasoning: 'Phase 2 cannot begin because list has no loop.',
-          codeLine: { python: 11, cpp: 11, java: 11 },
+          codeLine: { python: 13, cpp: 12, java: 12 },
           variables: { fast: null, cycleEntry: null },
           highlightedNodes: slow !== null ? [slow] : [],
         });
@@ -109,7 +109,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
         title: `Phase 1: Iteration ${iteration}`,
         explanation: `Slow at [${nodes[slow!].value}], Fast at [${nodes[fast].value}].`,
         detailedReasoning: 'Advancing pointers at 1x and 2x.',
-        codeLine: { python: 6, cpp: 6, java: 6 },
+        codeLine: { python: 8, cpp: 8, java: 8 },
         variables: { slow: slow!, fast },
         highlightedNodes: [slow!, fast],
       });
@@ -146,7 +146,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
     title: 'Phase 1: Detect Meeting Point',
     explanation: `Slow (1x) and Fast (2x) start at Head [${nodes[0].value}]. Target cycle entry is at Index ${cyclePos} ([${nodes[cyclePos].value}]).`,
     detailedReasoning: `Before finding the cycle entry, pointers must collide inside the cycle. μ = ${mu} (prefix), λ = ${lambda} (cycle length).`,
-    codeLine: { python: 4, cpp: 4, java: 4 },
+    codeLine: { python: 6, cpp: 6, java: 6 },
     variables: { slow: nodes[0].value, fast: nodes[0].value, phase: '1: Detect Collision' },
     mathNotes: { mu, lambda },
     highlightedNodes: [0],
@@ -183,7 +183,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
         title: `Phase 1 Complete: Collision at [${nodes[slow].value}]!`,
         explanation: `Slow and Fast collided at Node [${nodes[slow].value}] (Index ${slow}). Meeting point locked!`,
         detailedReasoning: `Meeting point M is node ${slow}. Distance from entry k = ${k}. From proof: μ = m·λ - k. We now begin Phase 2.`,
-        codeLine: { python: 8, cpp: 8, java: 8 },
+        codeLine: { python: 11, cpp: 10, java: 10 },
         variables: { 
           'meetingNode': nodes[slow].value, 
           'k (dist from entry)': k,
@@ -213,7 +213,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
       title: `Phase 1: Iteration ${iteration}`,
       explanation: `Slow stepped to [${nodes[slow!].value}], Fast leaped to [${nodes[fast!].value}].`,
       detailedReasoning: `Pointers are closing the distance inside the cycle. Closing rate = 1 node / step.`,
-      codeLine: { python: 6, cpp: 6, java: 6 },
+      codeLine: { python: 8, cpp: 8, java: 8 },
       variables: { slow: nodes[slow!].value, fast: nodes[fast!].value },
       mathNotes: { mu, lambda },
       highlightedNodes: [slow!, fast!],
@@ -241,7 +241,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
         title: `Cycle Entry Located: Node [${nodes[ptr1].value}]!`,
         explanation: `Meeting point was directly at Head/Cycle Entry [${nodes[ptr1].value}] (μ = 0).`,
         detailedReasoning: `Since the entire list is a cycle starting at head (μ = 0), the collision occurred at the entry.`,
-        codeLine: { python: 17, cpp: 17, java: 17 },
+        codeLine: { python: 21, cpp: 20, java: 20 },
         variables: { 'Cycle Entry': nodes[ptr1].value, 'Entry Index': ptr1 },
         highlightedNodes: [ptr1],
       });
@@ -274,7 +274,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
       title: 'Phase 2: Reset Pointer 1 to Head',
       explanation: `Ptr 1 (Slow) reset to Head [${nodes[0].value}]. Ptr 2 (Hare) remains at Meeting Node [${nodes[ptr2].value}]. Both will now move 1 step at a time!`,
       detailedReasoning: `Distance from Head to Entry is μ = ${mu}. Distance from Meeting Point to Entry along the loop is (λ - k) = ${lambda - k}. Because μ ≡ (λ - k) (mod λ), they will meet precisely at the entry node!`,
-      codeLine: { python: 13, cpp: 13, java: 13 },
+      codeLine: { python: 16, cpp: 15, java: 15 },
       variables: { 
         'ptr1 (Head)': nodes[0].value, 
         'ptr2 (Meeting)': nodes[ptr2].value, 
@@ -315,7 +315,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
           title: `Cycle Entry Located: Node [${nodes[ptr1].value}]!`,
           explanation: `Both pointers met at Node [${nodes[ptr1].value}] (Index ${ptr1}). This is the exact start of the cycle!`,
           detailedReasoning: `Ptr 1 walked exactly μ = ${mu} steps from Head. Ptr 2 walked μ steps from meeting point M and completed the loop to reach the entry. Mathematical certainty confirmed!`,
-          codeLine: { python: 17, cpp: 17, java: 17 },
+          codeLine: { python: 21, cpp: 20, java: 20 },
           variables: { 
             'Cycle Entry': nodes[ptr1].value, 
             'Entry Index': ptr1,
@@ -343,7 +343,7 @@ export function simulateCycleEntry(options: CycleEntryOptions): AlgorithmSimulat
           title: `Phase 2: Step ${phase2Step} (Both 1x)`,
           explanation: `Ptr 1 moved to [${nodes[ptr1].value}], Ptr 2 moved to [${nodes[ptr2].value}].`,
           detailedReasoning: `Both pointers move synchronously at 1 step/iteration. Distance remaining to entry for Ptr 1: ${mu - phase2Step}.`,
-          codeLine: { python: 15, cpp: 15, java: 15 },
+          codeLine: { python: 18, cpp: 17, java: 17 },
           variables: { 
             'ptr1': nodes[ptr1].value, 
             'ptr2': nodes[ptr2].value,

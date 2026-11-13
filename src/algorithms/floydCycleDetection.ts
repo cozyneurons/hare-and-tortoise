@@ -46,7 +46,7 @@ export function simulateFloydCycleDetection(options: CycleDetectionOptions): Alg
       title: 'Empty List',
       explanation: 'Head pointer is null. An empty list cannot contain a cycle.',
       detailedReasoning: 'No traversal is possible. The algorithm terminates immediately with false.',
-      codeLine: { python: 2, cpp: 2, java: 2 },
+      codeLine: { python: 4, cpp: 4, java: 4 },
       variables: { slow: null, fast: null, hasCycle: false },
     });
     return {
@@ -75,7 +75,7 @@ export function simulateFloydCycleDetection(options: CycleDetectionOptions): Alg
     title: 'Initialize Pointers',
     explanation: `Slow (Tortoise) and Fast (Hare) both placed at Head node [${nodes[0].value}].`,
     detailedReasoning: 'Both pointers begin at the start of the linked list. The search space is initialized.',
-    codeLine: { python: 3, cpp: 3, java: 3 },
+    codeLine: { python: 5, cpp: 6, java: 6 },
     variables: { 
       'slow.val': nodes[slow].value, 
       'fast.val': nodes[fast].value,
@@ -122,7 +122,7 @@ export function simulateFloydCycleDetection(options: CycleDetectionOptions): Alg
         title: `Collision at Node [${nodes[slow].value}]!`,
         explanation: `Slow and Fast pointers converged on Node [${nodes[slow].value}] (Index ${slow}).`,
         detailedReasoning: `Because Fast moves at 2x and Slow at 1x, their relative closing speed within the cycle is 1 node per iteration. A collision is mathematically guaranteed. Cycle detected!`,
-        codeLine: { python: 8, cpp: 8, java: 8 },
+        codeLine: { python: 10, cpp: 11, java: 11 },
         variables: { 
           'slow.val': nodes[slow].value, 
           'fast.val': nodes[fast].value, 
@@ -150,7 +150,7 @@ export function simulateFloydCycleDetection(options: CycleDetectionOptions): Alg
           ? `Fast pointer reached null. No cycle exists.` 
           : `Fast pointer reached terminal Node [${nodes[fast].value}], whose next is null.`,
         detailedReasoning: 'A singly linked list with a cycle has no null-terminating node. Since Fast encountered null, the structure is strictly linear.',
-        codeLine: { python: 11, cpp: 11, java: 11 },
+        codeLine: { python: 12, cpp: 14, java: 14 },
         variables: { 
           'slow.val': slow !== null ? nodes[slow].value : null, 
           'fast': fast !== null ? nodes[fast].value : 'null', 
@@ -174,7 +174,7 @@ export function simulateFloydCycleDetection(options: CycleDetectionOptions): Alg
       title: `Iteration ${iteration}`,
       explanation: `Slow stepped 1x to Node [${nodes[slow!].value}], Fast leaped 2x to Node [${nodes[fast].value}].`,
       detailedReasoning: `Slow advanced 1 node. Fast advanced 2 nodes. Pointers are currently at distinct locations (slow=${slow}, fast=${fast}). Traversing continues.`,
-      codeLine: { python: 5, cpp: 5, java: 5 },
+      codeLine: { python: 7, cpp: 8, java: 8 },
       variables: { 
         'slow.val': nodes[slow!].value, 
         'fast.val': nodes[fast].value,

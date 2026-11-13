@@ -65,7 +65,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
     title: 'Functional Graph Mapped: Start at Index 0',
     explanation: `Array of length ${nums.length} mapped to functional graph $i \\to nums[i]$. Pointers begin at head Index 0.`,
     detailedReasoning: `Because elements are in range [1, n], no element points to Index 0. Index 0 is a guaranteed entry point into the graph component containing the cycle.`,
-    codeLine: { python: 3, cpp: 3, java: 3 },
+    codeLine: { python: 4, cpp: 4, java: 4 },
     variables: { 
       'array': JSON.stringify(nums), 
       'n': validation.n!, 
@@ -87,7 +87,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
     title: 'Phase 1: First Leap',
     explanation: `Slow stepped 1x to Index ${slow} ($nums[0] = ${slow}$). Fast leaped 2x to Index ${fast} ($nums[nums[0]] = ${fast}$).`,
     detailedReasoning: `Fast travels along the array values twice as fast as Slow.`,
-    codeLine: { python: 5, cpp: 5, java: 5 },
+    codeLine: { python: 7, cpp: 7, java: 7 },
     variables: { 
       'slow': slow, 
       'nums[slow]': nums[slow], 
@@ -121,7 +121,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
         title: `Phase 1 Collision at Index ${slow}!`,
         explanation: `Slow and Fast collided at Index ${slow} ($value = ${nums[slow]}$). A cycle is confirmed in the functional graph.`,
         detailedReasoning: `Pointers met inside the loop formed by the duplicate value. Now transition to Phase 2 to locate the cycle entry.`,
-        codeLine: { python: 8, cpp: 8, java: 8 },
+        codeLine: { python: 10, cpp: 9, java: 9 },
         variables: { 
           'meetingIndex': slow, 
           'meetingValue': nums[slow], 
@@ -143,7 +143,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
         title: `Phase 1: Iteration ${iteration}`,
         explanation: `Slow at Index ${slow} ($val=${nums[slow]}$), Fast at Index ${fast} ($val=${nums[fast]}$).`,
         detailedReasoning: `Slow traversed to nums[${prevSlow}] = ${slow}. Fast traversed two hops to nums[nums[${prevFast}]] = ${fast}.`,
-        codeLine: { python: 6, cpp: 6, java: 6 },
+        codeLine: { python: 7, cpp: 7, java: 7 },
         variables: { slow, fast, 'nums[slow]': nums[slow], 'nums[fast]': nums[fast] },
         highlightedNodes: [slow, fast],
       });
@@ -166,7 +166,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
     title: 'Phase 2: Reset Pointer 1 to Index 0',
     explanation: `Ptr 1 reset to Index 0. Ptr 2 remains at collision Index ${ptr2}. Both will advance 1 hop at a time until meeting!`,
     detailedReasoning: `By Floyd's distance theorem, the distance from Index 0 to the duplicate entry equals the distance from collision ${ptr2} forward to the duplicate entry.`,
-    codeLine: { python: 11, cpp: 11, java: 11 },
+    codeLine: { python: 13, cpp: 12, java: 12 },
     variables: { 'ptr1': 0, 'ptr2': ptr2, 'speed': '1x step' },
     highlightedNodes: [ptr1, ptr2],
   });
@@ -196,7 +196,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
         title: `Duplicate Number Found: ${ptr1}!`,
         explanation: `Both pointers collided at Index/Value ${ptr1}. The duplicate number in the array is ${ptr1}!`,
         detailedReasoning: `Multiple indices lead to ${ptr1}, creating the cycle entrance. Solved in O(N) time and O(1) auxiliary space without modifying the original array!`,
-        codeLine: { python: 15, cpp: 15, java: 15 },
+        codeLine: { python: 19, cpp: 18, java: 18 },
         variables: { 
           'Duplicate Number': ptr1, 
           'Cycle Entry Index': ptr1,
@@ -218,7 +218,7 @@ export function simulateFindDuplicate(nums: number[]): AlgorithmSimulationResult
         title: `Phase 2: Step ${phase2Step}`,
         explanation: `Ptr 1 moved to Index ${ptr1} ($nums[${prev1}] = ${ptr1}$), Ptr 2 moved to Index ${ptr2} ($nums[${prev2}] = ${ptr2}$).`,
         detailedReasoning: `Both pointers stepping 1x towards the cycle entry.`,
-        codeLine: { python: 13, cpp: 13, java: 13 },
+        codeLine: { python: 16, cpp: 15, java: 15 },
         variables: { ptr1, ptr2, 'nums[ptr1]': nums[ptr1], 'nums[ptr2]': nums[ptr2] },
         highlightedNodes: [ptr1, ptr2],
       });
