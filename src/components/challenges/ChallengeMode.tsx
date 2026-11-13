@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Trophy, 
-  Flame, 
-  Sparkles, 
-  CheckCircle2, 
-  XCircle, 
-  ArrowRight,
-  ShieldAlert,
-  Award
-} from 'lucide-react';
+  PixelHareSprite, 
+  PixelTortoiseSprite 
+} from '../pixel/PixelSprites';
 import { sound } from '../../utils/audio';
 import { simulateFloydCycleDetection } from '../../algorithms/floydCycleDetection';
 import { simulateCycleEntry } from '../../algorithms/cycleEntry';
@@ -36,7 +30,7 @@ export const ChallengeMode: React.FC = () => {
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
 
-  // Score & Streak State (persisted in localStorage)
+  // Score & Streak State
   const [score, setScore] = useState<number>(() => {
     const saved = localStorage.getItem('chase_loop_score');
     return saved ? Number(saved) : 0;
@@ -51,7 +45,6 @@ export const ChallengeMode: React.FC = () => {
   });
   const [questionsAnswered, setQuestionsAnswered] = useState<number>(0);
 
-  // Generator for challenge questions
   const generateQuestion = (diff: Difficulty): ChallengeQuestion => {
     const types: ChallengeQuestion['type'][] = [
       'cycle-exist',
@@ -73,16 +66,16 @@ export const ChallengeMode: React.FC = () => {
         id: qId,
         type: 'cycle-exist',
         difficulty: diff,
-        prompt: 'Does this linked list structure contain a cycle?',
+        prompt: 'A wild linked list appeared! Does this sequence contain a closed cycle?',
         details: hasCycle
-          ? `List has ${nodeCount} nodes. Node #${nodeCount - 1} points back to Node #${cyclePos}.`
+          ? `List has ${nodeCount} nodes. Node #${nodeCount - 1} links back to Node #${cyclePos}.`
           : `List has ${nodeCount} nodes. Node #${nodeCount - 1} points to null.`,
-        options: ['Yes (Cycle Detected)', 'No (Strictly Linear)'],
-        correctAnswer: hasCycle ? 'Yes (Cycle Detected)' : 'No (Strictly Linear)',
+        options: ['YES (Cycle Present)', 'NO (Strictly Linear)'],
+        correctAnswer: hasCycle ? 'YES (Cycle Present)' : 'NO (Strictly Linear)',
         explanation: hasCycle
-          ? `Correct! Because node ${nodeCount - 1} points to node ${cyclePos}, there is a closed loop of length ${nodeCount - cyclePos}.`
-          : `Correct! Fast reaches null in at most ceil(${nodeCount}/2) iterations.`,
-        mathExplanation: `Relative speed of 1 guarantees collision inside any cycle or immediate termination at null.`,
+          ? `Super effective! Node #${nodeCount - 1} links to Node #${cyclePos}, trapping pointers in a loop of length ${nodeCount - cyclePos}.`
+          : `Got away safely! Fast encounters null in at most ceil(${nodeCount}/2) turns.`,
+        mathExplanation: `Relative speed of 1 guarantees collision in closed loop or immediate termination at null.`,
       };
     }
 
@@ -102,12 +95,12 @@ export const ChallengeMode: React.FC = () => {
         id: qId,
         type: 'predict-middle',
         difficulty: diff,
-        prompt: `For a linked list with ${nodeCount} nodes (indices 0 to ${nodeCount - 1}), which node index is returned as the middle?`,
+        prompt: `For a linear list with ${nodeCount} nodes (#0 to #${nodeCount - 1}), which node is the middle?`,
         details: `Convention: Standard second middle for even lengths (floor(N/2)).`,
         options,
         correctAnswer: midVal,
-        explanation: `Correct! When Fast reaches the end (null or tail), Slow has traversed floor(${nodeCount} / 2) = ${midVal} nodes.`,
-        mathExplanation: `Speed ratio is 2:1. When fast travels ${nodeCount} steps, slow travels ${nodeCount}/2 steps.`,
+        explanation: `Critical hit! When Fast reaches the end, Slow has traversed floor(${nodeCount}/2) = ${midVal} nodes.`,
+        mathExplanation: `Speed ratio is 2:1. When fast travels ${nodeCount} steps, slow travels exactly ${nodeCount}/2 steps.`,
       };
     }
 
@@ -132,12 +125,12 @@ export const ChallengeMode: React.FC = () => {
         id: qId,
         type: 'find-duplicate',
         difficulty: diff,
-        prompt: 'Which number is repeated in this array?',
-        details: `Array of length ${arr.length}: [${arr.join(', ')}]. Each value is in [1, ${n}].`,
+        prompt: 'Identify the duplicate number hidden in this array!',
+        details: `Array of length ${arr.length}: [${arr.join(', ')}]. Elements are in [1, ${n}].`,
         options,
         correctAnswer: dup,
-        explanation: `Correct! Value ${dup} appears at multiple indices, creating a collision in the functional graph traversal.`,
-        mathExplanation: `By the Pigeonhole Principle, n+1 items in n buckets guarantees in-degree >= 2 for the duplicate.`,
+        explanation: `Super effective! Value ${dup} appears at multiple indices, creating an in-degree >= 2 collision!`,
+        mathExplanation: `Pigeonhole principle guarantees in-degree >= 2 for the duplicate in the functional graph.`,
       };
     }
 
@@ -158,20 +151,18 @@ export const ChallengeMode: React.FC = () => {
       type: 'cycle-entry',
       difficulty: diff,
       prompt: `Where does the cycle begin?`,
-      details: `Linked list of ${nodeCount} nodes. Node #${nodeCount - 1} links back to create a loop. Phase 1 collision occurred at node #${res.meetingPointIndex}.`,
+      details: `List of ${nodeCount} nodes. Phase 1 collision happened at Node #${res.meetingPointIndex}.`,
       options,
       correctAnswer: cyclePos,
-      explanation: `Correct! When one pointer starts at Head (node 0) and one at Meeting node ${res.meetingPointIndex}, moving both at 1x causes them to meet at node ${cyclePos}.`,
-      mathExplanation: `Floyd proof: distance from head μ equals distance from meeting point (m·λ - k).`,
+      explanation: `Super effective! Moving two pointers at 1x from Head and Node #${res.meetingPointIndex} meets at Node #${cyclePos}!`,
+      mathExplanation: `Floyd proof: distance from head mu equals distance from meeting point (m*lambda - k).`,
     };
   };
 
-  // Load first question
   useEffect(() => {
     setCurrentQuestion(generateQuestion(difficulty));
   }, [difficulty]);
 
-  // Handle Answer Selection
   const handleSelectOption = (opt: string | number) => {
     if (isAnswered || !currentQuestion) return;
 
@@ -205,7 +196,6 @@ export const ChallengeMode: React.FC = () => {
     }
   };
 
-  // Next Question
   const handleNextQuestion = () => {
     sound.playClick();
     setSelectedAnswer(null);
@@ -215,39 +205,40 @@ export const ChallengeMode: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Header & Arcade Scoreboard */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-arcade-900 border border-arcade-800 p-4 rounded-2xl shadow-xl">
+    <div className="max-w-4xl mx-auto px-4 py-8 select-none">
+      {/* Top Trainer Battle HUD */}
+      <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-            <Trophy className="w-5 h-5" />
+          <div className="p-1 bg-gb-cream border-2 border-gb-ink">
+            <PixelTortoiseSprite size={28} />
           </div>
           <div>
-            <div className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
-              ARCADE CHALLENGE ARENA
+            <div className="font-pixel text-[9px] text-gb-pale">
+              TRAINER BATTLE ARENA
             </div>
-            <div className="text-lg font-extrabold text-white font-mono">
-              SCORE: <span className="text-lime-accent">{score.toLocaleString()} XP</span>
+            <div className="font-pixel text-sm text-gb-cream">
+              XP: <span className="text-hare">{score.toLocaleString()}</span>
             </div>
           </div>
         </div>
 
-        {/* Streak HUD */}
-        <div className="flex items-center gap-4 font-mono text-xs">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-arcade-950 border border-amber-500/30 text-amber-400">
-            <Flame className="w-4 h-4 fill-current animate-pulse text-amber-500" />
-            <span className="font-bold">STREAK: {streak}x</span>
+        {/* Streak & Difficulty Badges */}
+        <div className="flex items-center gap-3">
+          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-gb-cream">
+            BATTLES: {questionsAnswered}
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-arcade-950 border border-arcade-800 text-slate-400">
-            <Award className="w-4 h-4 text-cyan-400" />
-            <span>BEST: {highestStreak}</span>
+          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-retro-warning">
+            🔥 STREAK: {streak}x
+          </div>
+          <div className="px-2 py-1 bg-gb-forest border-2 border-gb-ink font-pixel text-[9px] text-gb-pale">
+            RECORD: {highestStreak}
           </div>
         </div>
       </div>
 
-      {/* Difficulty Switcher */}
-      <div className="flex items-center gap-2 mb-6">
-        <span className="text-xs font-mono text-slate-500 mr-2">DIFFICULTY:</span>
+      {/* Difficulty Switcher (Gym Tiers) */}
+      <div className="flex items-center gap-2 mb-6 font-pixel text-[9px]">
+        <span className="text-gb-pale mr-1">GYM TIER:</span>
         {(['beginner', 'intermediate', 'advanced'] as Difficulty[]).map((diff) => (
           <button
             key={diff}
@@ -257,110 +248,130 @@ export const ChallengeMode: React.FC = () => {
               setSelectedAnswer(null);
               setIsAnswered(false);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all ${
+            className={`px-2.5 py-1.5 border-2 border-gb-ink transition-all uppercase ${
               difficulty === diff
-                ? 'bg-lime-accent text-arcade-950 shadow-glow-lime'
-                : 'bg-arcade-900 border border-arcade-800 text-slate-400 hover:text-slate-200'
+                ? 'bg-gb-cream text-gb-ink font-bold shadow-pixel-sm'
+                : 'bg-gb-olive text-gb-cream hover:bg-gb-leaf'
             }`}
           >
-            {diff}
+            {diff === 'beginner' ? 'ROOKIE' : diff === 'intermediate' ? 'LEADER' : 'CHAMPION'}
           </button>
         ))}
       </div>
 
-      {/* Main Question Card */}
+      {/* Classic Pokémon Battle Arena Viewport */}
       {currentQuestion && (
-        <div className="p-6 bg-arcade-900 border border-arcade-800 rounded-2xl shadow-2xl relative overflow-hidden">
-          {/* Question Tag */}
-          <div className="flex items-center justify-between mb-4 border-b border-arcade-800 pb-3">
-            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-arcade-850 text-cyan-400 border border-cyan-500/20 uppercase">
-              {currentQuestion.type.replace('-', ' ')}
-            </span>
-            <span className="text-xs font-mono text-slate-500">
-              Q#{questionsAnswered + 1}
-            </span>
+        <div className="rpg-box-dark p-4 sm:p-6 border-4 border-gb-ink shadow-pixel mb-6">
+          {/* Opponent Card (Top Right) */}
+          <div className="flex justify-end mb-6">
+            <div className="rpg-box p-3 border-2 border-gb-ink shadow-pixel-sm min-w-[240px]">
+              <div className="flex justify-between items-center font-pixel text-[9px] border-b border-gb-ink pb-1 mb-1">
+                <span className="font-bold">WILD ALGORITHM</span>
+                <span className="text-hare">:L{difficulty === 'beginner' ? '25' : difficulty === 'intermediate' ? '50' : '85'}</span>
+              </div>
+              <div className="flex items-center gap-2 font-pixel text-[8px] text-gb-ink">
+                <span>HP:</span>
+                <div className="flex-1 h-2.5 bg-gb-forest border border-gb-ink p-0.5">
+                  <div className="h-full bg-retro-success w-full" />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Question Prompt */}
-          <h3 className="text-xl font-bold text-white mb-2 leading-snug">
-            {currentQuestion.prompt}
-          </h3>
-          <div className="p-3 rounded-lg bg-arcade-950 border border-arcade-800 font-mono text-xs text-slate-300 mb-6">
-            {currentQuestion.details}
+          {/* Player Card & Sprites (Bottom Left) */}
+          <div className="flex items-end justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <PixelTortoiseSprite size={44} className="animate-bounce-pixel" />
+              <PixelHareSprite size={44} className="animate-bounce-pixel" />
+            </div>
+
+            <div className="rpg-box p-3 border-2 border-gb-ink shadow-pixel-sm min-w-[240px]">
+              <div className="flex justify-between items-center font-pixel text-[9px] border-b border-gb-ink pb-1 mb-1">
+                <span className="font-bold">CHASE &amp; LOOP</span>
+                <span className="text-tortoise">:L{Math.min(99, 20 + streak * 5)}</span>
+              </div>
+              <div className="flex items-center gap-2 font-pixel text-[8px] text-gb-ink">
+                <span>EXP:</span>
+                <div className="flex-1 h-2.5 bg-gb-forest border border-gb-ink p-0.5">
+                  <div className="h-full bg-hare" style={{ width: `${Math.min(100, streak * 20)}%` }} />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Answer Options Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-            {currentQuestion.options.map((option, idx) => {
-              const isSelected = selectedAnswer === option;
-              const isOptionCorrect = option === currentQuestion.correctAnswer;
+          {/* Question Prompt Dialogue Box */}
+          <div className="rpg-box p-4 border-2 border-gb-ink mb-4">
+            <h3 className="font-pixel text-xs text-gb-ink mb-1.5 leading-snug">
+              {currentQuestion.prompt}
+            </h3>
+            <p className="font-vt323 text-xl text-gb-forest leading-tight">
+              &ldquo;{currentQuestion.details}&rdquo;
+            </p>
+          </div>
 
-              let btnStyle = 'bg-arcade-950 border-arcade-800 text-slate-200 hover:border-slate-600';
-              if (isAnswered) {
-                if (isOptionCorrect) {
-                  btnStyle = 'bg-emerald-950/80 border-lime-accent text-lime-accent font-bold shadow-glow-lime';
-                } else if (isSelected) {
-                  btnStyle = 'bg-rose-950/80 border-rose-500 text-rose-300 font-bold';
-                } else {
-                  btnStyle = 'bg-arcade-950/40 border-arcade-800 text-slate-600 opacity-50';
+          {/* 4-Quadrant Battle Action Menu */}
+          <div className="rpg-panel-cream p-4 border-2 border-gb-ink">
+            <div className="font-pixel text-[9px] text-gb-ink border-b-2 border-gb-ink pb-2 mb-3">
+              WHAT WILL TRAINER DO?
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {currentQuestion.options.map((option, idx) => {
+                const isSelected = selectedAnswer === option;
+                const isOptionCorrect = option === currentQuestion.correctAnswer;
+
+                let btnClass = 'bg-gb-surface text-gb-ink border-gb-ink hover:bg-gb-cream';
+                if (isAnswered) {
+                  if (isOptionCorrect) {
+                    btnClass = 'bg-retro-success text-white font-bold border-gb-ink shadow-pixel-sm';
+                  } else if (isSelected) {
+                    btnClass = 'bg-retro-error text-white font-bold border-gb-ink';
+                  } else {
+                    btnClass = 'bg-gb-forest/20 text-gb-ink/40 border-gb-ink';
+                  }
                 }
-              }
 
-              return (
-                <button
-                  key={`opt-${idx}`}
-                  disabled={isAnswered}
-                  onClick={() => handleSelectOption(option)}
-                  className={`flex items-center justify-between p-4 rounded-xl border font-mono text-sm transition-all duration-200 text-left ${btnStyle} ${
-                    !isAnswered ? 'active:scale-98' : ''
-                  }`}
-                >
-                  <span>{String(option)}</span>
-                  {isAnswered && isOptionCorrect && (
-                    <CheckCircle2 className="w-5 h-5 text-lime-accent shrink-0" />
-                  )}
-                  {isAnswered && isSelected && !isOptionCorrect && (
-                    <XCircle className="w-5 h-5 text-rose-400 shrink-0" />
-                  )}
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={`opt-${idx}`}
+                    disabled={isAnswered}
+                    onClick={() => handleSelectOption(option)}
+                    className={`p-3 border-2 font-pixel text-[10px] text-left transition-all flex items-center justify-between ${btnClass}`}
+                  >
+                    <span>
+                      <span className="text-hare mr-1.5">▶</span>
+                      {String(option)}
+                    </span>
+                    {isAnswered && isOptionCorrect && <span>★</span>}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Post-Answer Explanation Box */}
+          {/* Post-Battle Dialogue Box */}
           {isAnswered && (
-            <div className={`p-4 rounded-xl border mb-6 transition-all font-mono text-xs ${
-              isCorrect
-                ? 'bg-emerald-950/40 border-lime-accent/50 text-slate-200'
-                : 'bg-rose-950/30 border-rose-800/50 text-slate-200'
-            }`}>
-              <div className="flex items-center gap-2 font-bold mb-1.5">
+            <div className="rpg-box p-4 border-2 border-gb-ink mt-4">
+              <div className="font-pixel text-[10px] mb-1 font-bold">
                 {isCorrect ? (
-                  <span className="text-lime-accent flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4" /> EXCELLENT! +{(difficulty === 'beginner' ? 100 : difficulty === 'intermediate' ? 200 : 350) * Math.min(3, 1 + (streak - 1) * 0.2)} XP
-                  </span>
+                  <span className="text-retro-success">★ IT'S SUPER EFFECTIVE! ★</span>
                 ) : (
-                  <span className="text-rose-400 flex items-center gap-1.5">
-                    <ShieldAlert className="w-4 h-4" /> INCORRECT
-                  </span>
+                  <span className="text-retro-error">TRAINER'S GUESS MISSED...</span>
                 )}
               </div>
-              <p className="font-sans text-sm text-slate-300 mb-2 leading-relaxed">
+              <p className="font-vt323 text-xl text-gb-ink leading-tight mb-2">
                 {currentQuestion.explanation}
               </p>
-              <div className="p-2.5 rounded bg-arcade-950/80 border border-arcade-800 text-slate-400">
-                <span className="text-cyan-400 font-semibold">THEORY REASONING: </span>
-                {currentQuestion.mathExplanation}
+              <div className="p-2 bg-gb-surface border border-gb-ink font-vt323 text-lg text-gb-forest">
+                LOGIC: {currentQuestion.mathExplanation}
               </div>
 
-              {/* Next Question CTA */}
-              <div className="mt-4 flex justify-end">
+              <div className="mt-3 flex justify-end">
                 <button
                   onClick={handleNextQuestion}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-lime-accent hover:bg-lime-400 text-arcade-950 font-bold text-xs font-mono transition-all duration-150 active:scale-95 shadow-glow-lime"
+                  className="pixel-btn bg-hare text-white hover:bg-hare-light"
                 >
-                  <span>NEXT CHALLENGE</span>
-                  <ArrowRight className="w-4 h-4" />
+                  NEXT BATTLE ▶
                 </button>
               </div>
             </div>

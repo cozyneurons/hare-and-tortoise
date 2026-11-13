@@ -252,44 +252,44 @@ export const ArenaWorkspace: React.FC = () => {
             <CodeInspector mode={mode} currentStep={currentStep} />
           </div>
 
-          {/* Quick Simulation Statistics Panel */}
-          <div className="p-4 bg-arcade-900 border border-arcade-800 rounded-xl shadow-xl font-mono text-xs">
-            <div className="text-slate-400 font-bold mb-3 border-b border-arcade-800 pb-1.5 flex justify-between items-center">
-              <span>ALGORITHM METRICS</span>
-              <span className="text-lime-accent text-[10px]">LIVE BENCHMARK</span>
+          {/* Quick Simulation Statistics Panel (Styled as Laboratory Bench Data) */}
+          <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel font-pixel text-[9px] text-gb-cream">
+            <div className="text-gb-pale font-bold mb-2.5 border-b-2 border-gb-ink pb-1 flex justify-between items-center">
+              <span>RESEARCH DATA</span>
+              <span className="text-hare text-[8px]">ACTIVE STATS</span>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 font-vt323 text-xl">
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Total Steps:</span>
-                <span className="text-white font-semibold">{totalSteps}</span>
+                <span className="text-gb-pale">TOTAL TURNS:</span>
+                <span className="text-white font-bold">{totalSteps}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Total Pointer Hops:</span>
-                <span className="text-cyan-400 font-semibold">
+                <span className="text-gb-pale">POINTER HOPS:</span>
+                <span className="text-tortoise font-bold">
                   {simulationResult.stats.totalPointerMoves}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Auxiliary Space:</span>
-                <span className="text-lime-accent font-semibold">O(1) Constant</span>
+                <span className="text-gb-pale">AUXILIARY SPACE:</span>
+                <span className="text-retro-success font-bold">O(1) CONSTANT</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Time Complexity:</span>
-                <span className="text-amber-400 font-semibold">O(N) Linear</span>
+                <span className="text-gb-pale">TIME COMPLEXITY:</span>
+                <span className="text-retro-warning font-bold">O(N) LINEAR</span>
               </div>
               {simulationResult.stats.cycleLength !== undefined && (
-                <div className="flex justify-between items-center border-t border-arcade-800/60 pt-1.5">
-                  <span className="text-slate-400">Cycle Length (&lambda;):</span>
-                  <span className="text-pink-400 font-semibold">
-                    {simulationResult.stats.cycleLength} nodes
+                <div className="flex justify-between items-center border-t border-gb-ink pt-1 text-hare">
+                  <span>CYCLE LENGTH (&lambda;):</span>
+                  <span className="font-bold">
+                    {simulationResult.stats.cycleLength} TILES
                   </span>
                 </div>
               )}
               {simulationResult.stats.nonCycleLength !== undefined && (
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Prefix Distance (&mu;):</span>
-                  <span className="text-cyan-300 font-semibold">
-                    {simulationResult.stats.nonCycleLength} nodes
+                <div className="flex justify-between items-center text-gb-cream">
+                  <span>PREFIX DIST (&mu;):</span>
+                  <span className="font-bold">
+                    {simulationResult.stats.nonCycleLength} TILES
                   </span>
                 </div>
               )}

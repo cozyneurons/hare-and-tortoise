@@ -1,12 +1,11 @@
-// Synthesized Arcade Sound System via Web Audio API
+// Authentic 8-Bit Game Boy Synthesized Audio Engine via Web Audio API
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
-  private volume: number = 0.25;
+  private volume: number = 0.2;
 
   constructor() {
-    // Check saved mute preference
     const savedMute = localStorage.getItem('chase_loop_muted');
     if (savedMute !== null) {
       this.isMuted = savedMute === 'true';
@@ -35,6 +34,7 @@ class SoundEngine {
     return this.isMuted;
   }
 
+  // Classic Game Boy Menu Select / Step Blip (Square Wave)
   public playStep() {
     if (this.isMuted) return;
     this.initCtx();
@@ -45,11 +45,11 @@ class SoundEngine {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'triangle';
+      osc.type = 'square';
       osc.frequency.setValueAtTime(440, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.06);
+      osc.frequency.setValueAtTime(880, now + 0.03);
 
-      gain.gain.setValueAtTime(this.volume * 0.4, now);
+      gain.gain.setValueAtTime(this.volume * 0.3, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
 
       osc.connect(gain);
@@ -58,10 +58,11 @@ class SoundEngine {
       osc.start(now);
       osc.stop(now + 0.06);
     } catch {
-      // Audio context error or blocked by browser autoplay policy
+      // Audio safety
     }
   }
 
+  // Hare 2x Leap (Chirp upward)
   public playFastJump() {
     if (this.isMuted) return;
     this.initCtx();
@@ -72,9 +73,9 @@ class SoundEngine {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600, now);
-      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(587.33, now); // D5
+      osc.frequency.setValueAtTime(1174.66, now + 0.04); // D6
 
       gain.gain.setValueAtTime(this.volume * 0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
@@ -89,6 +90,7 @@ class SoundEngine {
     }
   }
 
+  // Retro Battle Collision / Collision Crash
   public playCollision() {
     if (this.isMuted) return;
     this.initCtx();
@@ -97,28 +99,30 @@ class SoundEngine {
     try {
       const now = this.ctx.currentTime;
       
-      // Dual harmonic collision pulse
-      [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+      // Game Boy 8-bit collision arpeggio
+      const notes = [261.63, 329.63, 392.00, 523.25]; // C E G C
+      notes.forEach((freq, idx) => {
         const osc = this.ctx!.createOscillator();
         const gain = this.ctx!.createGain();
 
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.04);
 
-        gain.gain.setValueAtTime(this.volume * 0.4, now + idx * 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        gain.gain.setValueAtTime(this.volume * 0.4, now + idx * 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
 
         osc.connect(gain);
         gain.connect(this.ctx!.destination);
 
-        osc.start(now + idx * 0.03);
-        osc.stop(now + 0.35);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + 0.28);
       });
     } catch {
       // Safety
     }
   }
 
+  // Pokemon Gym / Battle Victory Jingle (Fanfare)
   public playVictory() {
     if (this.isMuted) return;
     this.initCtx();
@@ -126,30 +130,41 @@ class SoundEngine {
 
     try {
       const now = this.ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C E G C E
+      // Classic 8-bit victory arpeggio: G C E G G G
+      const fanfare = [
+        { f: 392.00, d: 0.1 },  // G4
+        { f: 523.25, d: 0.1 },  // C5
+        { f: 659.25, d: 0.1 },  // E5
+        { f: 783.99, d: 0.25 }, // G5
+        { f: 659.25, d: 0.1 },  // E5
+        { f: 783.99, d: 0.4 },  // G5 long
+      ];
 
-      notes.forEach((freq, idx) => {
+      let elapsed = 0;
+      fanfare.forEach(({ f, d }) => {
         const osc = this.ctx!.createOscillator();
         const gain = this.ctx!.createGain();
 
-        const startTime = now + idx * 0.08;
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, startTime);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(f, now + elapsed);
 
-        gain.gain.setValueAtTime(this.volume * 0.5, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.25);
+        gain.gain.setValueAtTime(this.volume * 0.45, now + elapsed);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + elapsed + d);
 
         osc.connect(gain);
         gain.connect(this.ctx!.destination);
 
-        osc.start(startTime);
-        osc.stop(startTime + 0.25);
+        osc.start(now + elapsed);
+        osc.stop(now + elapsed + d);
+
+        elapsed += d * 0.85;
       });
     } catch {
       // Safety
     }
   }
 
+  // Game Boy Menu Rewind / Cancel Sound
   public playReset() {
     if (this.isMuted) return;
     this.initCtx();
@@ -160,9 +175,9 @@ class SoundEngine {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'sine';
+      osc.type = 'square';
       osc.frequency.setValueAtTime(600, now);
-      osc.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+      osc.frequency.setValueAtTime(300, now + 0.06);
 
       gain.gain.setValueAtTime(this.volume * 0.3, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
@@ -177,6 +192,7 @@ class SoundEngine {
     }
   }
 
+  // Classic RPG Menu Cursor Tick
   public playClick() {
     if (this.isMuted) return;
     this.initCtx();
@@ -187,7 +203,7 @@ class SoundEngine {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'sine';
+      osc.type = 'square';
       osc.frequency.setValueAtTime(800, now);
 
       gain.gain.setValueAtTime(this.volume * 0.2, now);

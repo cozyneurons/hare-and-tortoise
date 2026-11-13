@@ -1,126 +1,115 @@
 import React, { useState } from 'react';
 import { 
-  BookOpen, 
-  Calculator, 
-  CheckCircle2, 
-  ChevronRight
-} from 'lucide-react';
+  PixelHareSprite, 
+  PixelTortoiseSprite, 
+  PixelBadge 
+} from '../pixel/PixelSprites';
+import { sound } from '../../utils/audio';
 
 export const LearningSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [demoMu, setDemoMu] = useState<number>(3);
   const [demoLambda, setDemoLambda] = useState<number>(5);
 
-  const modules = [
+  const pokedexEntries = [
     {
-      id: 'fundamentals',
-      title: '01. Fundamentals of Two Pointers',
-      subtitle: 'The Intuition Behind Hare & Tortoise',
+      num: 'No. 001',
+      title: 'TWO-POINTER BASICS',
+      subtitle: 'SPECIES: HARE & TORTOISE ALGORITHM',
+      sprite: <PixelTortoiseSprite size={32} />,
+      type: 'SEARCH / FAST-SLOW',
+      stats: { height: '1x & 2x', weight: 'O(1) SPACE', habitat: 'SINGLY LINKED LIST' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            The <strong>Hare and Tortoise Algorithm</strong>, officially known as <strong>Floyd's Cycle-Finding Algorithm</strong>, 
-            is an algorithmic paradigm invented by Robert W. Floyd in 1967. 
-            It utilizes two pointer references advancing through a sequence or graph structure at <em>different velocities</em>.
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <p>
+            Invented by Robert W. Floyd in 1967, this legendary handheld algorithmic technique uses two pointer references advancing through node structures at <em>different velocities</em>.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 font-mono text-xs">
-            <div className="p-3.5 rounded-lg bg-arcade-950 border border-cyan-500/40">
-              <div className="flex items-center gap-2 text-cyan-400 font-bold mb-1">
-                <span>🐢 TORTOISE (SLOW POINTER)</span>
-              </div>
-              <p className="text-slate-400 leading-normal">
-                Moves at <strong>1 node per step</strong>: <code className="text-cyan-300">slow = slow.next</code>. 
-                Serves as the baseline measuring stick of list traversal.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-2 font-pixel text-[9px]">
+            <div className="p-3 bg-gb-cream border-2 border-gb-ink">
+              <div className="text-tortoise font-bold mb-1">TORTOISE (SLOW POINTER)</div>
+              <p className="font-vt323 text-lg text-gb-ink leading-snug">
+                Advances <strong>1 node per turn</strong> (<code className="bg-gb-forest/10 px-1">slow = slow.next</code>). 
+                Measures steady traversal pace across the sequence.
               </p>
             </div>
-            <div className="p-3.5 rounded-lg bg-arcade-950 border border-amber-500/40">
-              <div className="flex items-center gap-2 text-amber-400 font-bold mb-1">
-                <span>🐇 HARE (FAST POINTER)</span>
-              </div>
-              <p className="text-slate-400 leading-normal">
-                Moves at <strong>2 nodes per step</strong>: <code className="text-amber-300">fast = fast.next.next</code>. 
-                Probes ahead into unexplored territory at twice the speed.
+            <div className="p-3 bg-gb-cream border-2 border-gb-ink">
+              <div className="text-hare font-bold mb-1">HARE (FAST POINTER)</div>
+              <p className="font-vt323 text-lg text-gb-ink leading-snug">
+                Advances <strong>2 nodes per turn</strong> (<code className="bg-gb-forest/10 px-1">fast = fast.next.next</code>). 
+                Probes into unknown list territory at double speed.
               </p>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-arcade-850 border border-arcade-800 text-xs text-slate-300 leading-relaxed">
-            <strong className="text-lime-accent">Why Constant Space O(1)?</strong><br />
-            Traditional cycle detection requires allocating a hash set to store node memory addresses ($O(N)$ extra memory). 
-            Floyd's algorithm requires only two pointer memory addresses stored in CPU registers, enabling cycle detection inside memory-constrained firmware, kernel drivers, and embedded systems.
+          <div className="p-3 bg-gb-surface border-2 border-gb-ink text-gb-ink">
+            <strong className="font-pixel text-[9px] text-gb-forest block mb-1">POKÉDEX DATA ENTRY:</strong>
+            Traditional cycle detection consumes a Hash Set ($O(N)$ extra memory). Floyd's algorithm requires only two CPU register memory addresses, enabling instant cycle detection inside RAM-constrained handhelds and embedded systems!
           </div>
         </div>
       ),
     },
 
     {
-      id: 'why-twice-speed',
-      title: '02. Why Move Fast Exactly Twice as Fast?',
-      subtitle: 'The Mathematics of Relative Speed & Closing Rate',
+      num: 'No. 002',
+      title: 'THE 2X VELOCITY LAW',
+      subtitle: 'SPECIES: RELATIVE CLOSING SPEED',
+      sprite: <PixelHareSprite size={32} />,
+      type: 'MATH / KINEMATICS',
+      stats: { height: '&Delta;v = 1', weight: '&le; &lambda; TURNS', habitat: 'CLOSED LOOP' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            A frequent question is: <em>Why 2x speed? Could fast move at 3x, 4x, or 5x speed?</em>
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <p>
+            <em>Why must the fast pointer move at exactly 2x speed? Could it move at 3x or 4x?</em>
           </p>
 
-          <div className="p-4 rounded-lg bg-arcade-950 border border-arcade-800 text-xs font-mono space-y-2">
-            <div className="text-lime-accent font-bold">RELATIVE CLOSING SPEED ANALYSIS:</div>
-            <div className="text-slate-300">
-              Let speed of Tortoise be <code>v_slow = 1</code> step/iteration.<br />
-              Let speed of Hare be <code>v_fast = 2</code> steps/iteration.
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
+            <div className="font-pixel text-[9px] text-hare font-bold mb-1">CLOSING SPEED DERIVATION:</div>
+            <div>&bull; Tortoise Velocity: <code>v_slow = 1</code> node/turn.</div>
+            <div>&bull; Hare Velocity: <code>v_fast = 2</code> nodes/turn.</div>
+            <div className="my-1.5 p-2 bg-gb-forest text-gb-cream font-bold">
+              Relative Closing Speed: &Delta;v = 2 - 1 = 1 node per turn!
             </div>
-            <div className="p-2.5 rounded bg-arcade-900 border border-arcade-800 text-white font-bold">
-              Relative Velocity: &Delta;v = v_fast - v_slow = 2 - 1 = 1 node/iteration.
-            </div>
-            <p className="text-slate-400 font-sans text-xs pt-1">
-              Because the relative distance between Hare and Tortoise decreases by <strong>strictly 1 node each iteration</strong> inside a loop of length &lambda;, the distance modulo &lambda; strictly decrements:
-              <br />
-              <code className="text-cyan-300">d, d - 1, d - 2, ..., 2, 1, 0 (COLLISION!)</code>
+            <p className="font-vt323 text-lg text-gb-ink mt-1">
+              Because their relative gap decreases by <strong>strictly 1 tile each turn</strong> modulo &lambda;, the distance strictly counts down:
+              $d, d-1, d-2, \dots, 2, 1, 0$ (COLLISION!).
             </p>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-rose-950/30 border border-rose-900/50 text-xs text-rose-200">
-            <strong>What happens if Fast moves at 3x speed?</strong><br />
-            If Fast moved at 3x speed, relative speed would be &Delta;v = 3 - 1 = 2 nodes/iteration. 
-            If the cycle length &lambda; were even and the starting distance were odd, Fast could leap <em>over</em> Slow and never collide, causing an infinite loop unless parity is explicitly managed! 
-            A speed difference of exactly 1 guarantees collision without any risk of skipping.
+          <div className="p-3 bg-retro-error/15 border-2 border-retro-error text-gb-ink">
+            <strong className="font-pixel text-[9px] text-retro-error block mb-0.5">WARNING (THE 3x TRAP):</strong>
+            If Fast ran at 3x speed, &Delta;v = 2. In an even-length cycle, Fast could leap <em>over</em> Slow indefinitely without ever landing on the exact same tile! A speed difference of 1 guarantees collision with zero risk of skipping.
           </div>
         </div>
       ),
     },
 
     {
-      id: 'cycle-detection',
-      title: '03. How Cycle Detection Works',
-      subtitle: 'Guaranteed Finite Termination',
+      num: 'No. 003',
+      title: 'CYCLE DETECTION',
+      subtitle: 'SPECIES: FINITE TERMINATION',
+      sprite: <PixelBadge type="detection" size={32} />,
+      type: 'LOGIC / TOPOLOGY',
+      stats: { height: 'TRUE/FALSE', weight: 'O(N) TIME', habitat: 'ANY LINKED LIST' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Floyd's algorithm establishes that any linked structure is either strictly linear or ends in a closed cycle.
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <p>
+            Every singly linked list is either strictly linear (terminating in null) or has a closed cycle.
           </p>
 
-          <div className="space-y-2 font-mono text-xs">
-            <div className="p-3 rounded-lg bg-arcade-950 border border-arcade-800 flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <div>
-                <strong className="text-emerald-400">Case A: No Cycle (Linear List)</strong>
-                <p className="text-slate-400 font-sans text-xs mt-0.5">
-                  Hare reaches <code className="text-slate-200">null</code> or <code className="text-slate-200">fast.next == null</code> in at most &lceil;N / 2&rceil; iterations. 
-                  Algorithm returns <strong>false</strong> in $O(N)$ time.
-                </p>
-              </div>
+          <div className="space-y-2">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+              <strong className="font-pixel text-[9px] text-gb-forest block mb-1">SCENARIO A: LINEAR (NO CYCLE)</strong>
+              <p>
+                Hare encounters <code className="bg-gb-forest/10 px-1">null</code> or <code className="bg-gb-forest/10 px-1">fast.next == null</code> in at most &lceil;N/2&rceil; turns. Algorithm returns <strong>FALSE</strong> in $O(N)$ time.
+              </p>
             </div>
 
-            <div className="p-3 rounded-lg bg-arcade-950 border border-arcade-800 flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-              <div>
-                <strong className="text-cyan-400">Case B: Cycle Exists</strong>
-                <p className="text-slate-400 font-sans text-xs mt-0.5">
-                  Once Tortoise enters the cycle, Hare is already somewhere inside the cycle. 
-                  Because the distance between them shrinks by 1 at every step, they must collide before Tortoise completes a single complete revolution around the cycle!
-                </p>
-              </div>
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+              <strong className="font-pixel text-[9px] text-hare block mb-1">SCENARIO B: LOOP PRESENT</strong>
+              <p>
+                Once Tortoise enters the cycle, Hare is already inside. Since the gap closes by 1 tile per turn, collision is guaranteed before Tortoise completes a single lap!
+              </p>
             </div>
           </div>
         </div>
@@ -128,83 +117,63 @@ export const LearningSection: React.FC = () => {
     },
 
     {
-      id: 'math-derivation',
-      title: '04. Finding the Cycle Entry (Mathematical Proof)',
-      subtitle: 'The Famous μ = m·λ - k Derivation',
+      num: 'No. 004',
+      title: 'CYCLE ENTRY PROOF',
+      subtitle: 'SPECIES: THE &mu; = m&middot;&lambda; - k THEOREM',
+      sprite: <PixelBadge type="entry" size={32} />,
+      type: 'PROOF / GEOMETRY',
+      stats: { height: '&mu; TILES', weight: 'm&middot;&lambda; - k', habitat: 'CYCLE ENTRY' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Finding where a cycle begins is one of the most elegant proofs in algorithmic computer science.
-          </p>
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
+            <div className="font-pixel text-[9px] text-hare font-bold mb-1.5">MATHEMATICAL PROOF DERIVATION:</div>
+            <div>&bull; Let <strong>&mu;</strong> = distance from Head to Cycle Entry.</div>
+            <div>&bull; Let <strong>&lambda;</strong> = length of Cycle.</div>
+            <div>&bull; Let <strong>k</strong> = distance from Entry to Meeting Point M.</div>
 
-          {/* Mathematical Proof Box */}
-          <div className="p-4 rounded-xl bg-arcade-950 border border-pink-900/40 text-xs font-mono space-y-3">
-            <div className="text-pink-400 font-bold flex items-center gap-2">
-              <Calculator className="w-4 h-4" />
-              <span>THE FLOYD DISTANCE THEOREM:</span>
+            <div className="p-2.5 bg-gb-forest text-gb-cream my-2 space-y-1 font-vt323 text-xl">
+              <div>Slow distance: <code>d_slow = &mu; + k</code></div>
+              <div>Fast distance: <code>d_fast = &mu; + k + m&lambda;</code> (m &ge; 1)</div>
+              <div>Speed ratio 2:1 &implies; &mu; + k + m&lambda; = 2(&mu; + k) = 2&mu; + 2k</div>
+              <div className="font-bold text-retro-warning pt-1">&mu; = m&middot;&lambda; - k = (m - 1)&lambda; + (&lambda; - k)</div>
             </div>
 
-            <div className="space-y-1 text-slate-300">
-              <div>&bull; Let <strong>&mu; (mu)</strong> = distance from Head to Cycle Entry.</div>
-              <div>&bull; Let <strong>&lambda; (lambda)</strong> = length of the Cycle.</div>
-              <div>&bull; Let <strong>k</strong> = distance from Cycle Entry to the Meeting Point M.</div>
-            </div>
-
-            <div className="p-3 rounded bg-arcade-900 border border-arcade-800 text-slate-200 space-y-1 leading-relaxed">
-              <div>Total distance walked by Slow: <code>d_slow = &mu; + k</code></div>
-              <div>Total distance walked by Fast: <code>d_fast = &mu; + k + m &middot; &lambda;</code> (for integer m &ge; 1)</div>
-              <div>Since Fast runs twice as fast: <code>d_fast = 2 &middot; d_slow</code></div>
-              <div className="text-lime-accent font-bold pt-1">
-                &mu; + k + m &middot; &lambda; = 2(&mu; + k) = 2&mu; + 2k
-              </div>
-              <div className="text-cyan-300 font-bold">
-                m &middot; &lambda; = &mu; + k
-              </div>
-              <div className="text-pink-300 font-bold text-sm pt-1">
-                &mu; = m &middot; &lambda; - k = (m - 1)&lambda; + (&lambda; - k)
-              </div>
-            </div>
-
-            <p className="text-slate-400 font-sans text-xs">
-              <strong>The Crucial Insight:</strong> The distance from the Head to the Cycle Entry is <strong>&mu;</strong>. 
-              The distance from the Meeting Point M forward along the cycle back to the Entry is <strong>(&lambda; - k)</strong>.
-              <br /><br />
-              Therefore, if we place one pointer at the <strong>Head</strong> and one pointer at the <strong>Meeting Point</strong>, and move both forward at <strong>1 step per iteration</strong>, they will traverse equal distances modulo &lambda; and <strong>collide precisely at the cycle entry node!</strong>
+            <p className="text-lg">
+              <strong>The Grand Insight:</strong> Distance from Head to Entry is &mu;. Distance from Meeting Point forward to Entry is (&lambda; - k). 
+              Both are identical modulo &lambda;! Moving two pointers at 1x from Head and Meeting point guarantees they collide at the Entry!
             </p>
           </div>
 
           {/* Interactive Calculator Slider */}
-          <div className="p-4 rounded-xl bg-arcade-900 border border-arcade-800 text-xs font-mono">
-            <div className="font-bold text-slate-300 mb-2">INTERACTIVE PROOF CALCULATOR:</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-3 bg-gb-cream border-2 border-gb-ink">
+            <div className="font-pixel text-[9px] text-gb-forest mb-2">INTERACTIVE PROOF CALCULATOR:</div>
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-slate-400 block mb-1">Prefix Length (&mu;): {demoMu}</label>
+                <label className="font-pixel text-[8px] block mb-1">PREFIX (&mu;): {demoMu}</label>
                 <input
                   type="range"
                   min={1}
                   max={8}
                   value={demoMu}
                   onChange={(e) => setDemoMu(Number(e.target.value))}
-                  className="w-full h-1 bg-arcade-800 rounded accent-cyan-400"
+                  className="w-full accent-hare cursor-pointer"
                 />
               </div>
               <div>
-                <label className="text-slate-400 block mb-1">Cycle Length (&lambda;): {demoLambda}</label>
+                <label className="font-pixel text-[8px] block mb-1">CYCLE (&lambda;): {demoLambda}</label>
                 <input
                   type="range"
                   min={2}
                   max={10}
                   value={demoLambda}
                   onChange={(e) => setDemoLambda(Number(e.target.value))}
-                  className="w-full h-1 bg-arcade-800 rounded accent-pink-400"
+                  className="w-full accent-tortoise cursor-pointer"
                 />
               </div>
             </div>
-            <div className="mt-3 p-2.5 rounded bg-arcade-950 border border-arcade-800 text-slate-300">
-              For &mu; = {demoMu} and &lambda; = {demoLambda}:<br />
-              Meeting offset k = ({demoLambda} - ({demoMu} % {demoLambda})) % {demoLambda} = {((demoLambda - (demoMu % demoLambda)) % demoLambda)}<br />
-              Remaining loop distance to entry: &lambda; - k = {demoLambda - ((demoLambda - (demoMu % demoLambda)) % demoLambda)} nodes.<br />
-              <span className="text-lime-accent font-semibold">&there4; Head pointer and Meeting pointer synchronize perfectly in {demoMu} steps!</span>
+            <div className="mt-2 text-lg text-gb-ink">
+              Remaining distance from Meeting Point to Entry: <strong>{demoLambda - ((demoLambda - (demoMu % demoLambda)) % demoLambda)}</strong> tiles.
+              Both pointers sync at Entry in exactly <strong>{demoMu}</strong> turns!
             </div>
           </div>
         </div>
@@ -212,30 +181,29 @@ export const LearningSection: React.FC = () => {
     },
 
     {
-      id: 'find-middle',
-      title: '05. Finding the Middle of a Linked List',
-      subtitle: 'Single-Pass Linear Search',
+      num: 'No. 005',
+      title: 'FIND MIDDLE NODE',
+      subtitle: 'SPECIES: SINGLE-PASS SPLITTER',
+      sprite: <PixelBadge type="middle" size={32} />,
+      type: 'DIVIDE / PARITY',
+      stats: { height: '&lfloor;N/2&rfloor;', weight: '1 PASS', habitat: 'ODD / EVEN LISTS' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Finding the middle node of a singly linked list in a single pass without querying or precomputing the length.
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <p>
+            Finds the middle node in a single traversal without counting the total length beforehand.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-            <div className="p-3.5 rounded-lg bg-arcade-950 border border-arcade-800">
-              <div className="text-lime-accent font-bold mb-1">ODD LENGTH LIST (e.g. 5 nodes)</div>
-              <p className="text-slate-400 font-sans leading-normal">
-                Nodes: [0, 1, 2, 3, 4]<br />
-                Fast stops at tail node 4 (<code className="text-slate-300">fast.next == null</code>).<br />
-                Slow is at exact middle node 2.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+              <strong className="font-pixel text-[9px] text-gb-forest block mb-1">ODD LENGTH (5 NODES)</strong>
+              <p>
+                Fast stops at tail node 4 (<code className="bg-gb-forest/10 px-1">fast.next == null</code>). Slow rests at exact middle node 2.
               </p>
             </div>
-            <div className="p-3.5 rounded-lg bg-arcade-950 border border-arcade-800">
-              <div className="text-cyan-400 font-bold mb-1">EVEN LENGTH LIST (e.g. 6 nodes)</div>
-              <p className="text-slate-400 font-sans leading-normal">
-                Nodes: [0, 1, 2, 3, 4, 5]<br />
-                Fast steps past tail into <code className="text-slate-300">null</code>.<br />
-                Slow is at second middle node 3 (&lfloor;N/2&rfloor;).
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+              <strong className="font-pixel text-[9px] text-tortoise block mb-1">EVEN LENGTH (6 NODES)</strong>
+              <p>
+                Fast steps past tail into <code className="bg-gb-forest/10 px-1">null</code>. Slow rests at second middle node 3 (&lfloor;N/2&rfloor;).
               </p>
             </div>
           </div>
@@ -244,29 +212,31 @@ export const LearningSection: React.FC = () => {
     },
 
     {
-      id: 'functional-graphs',
-      title: '06. Interpreting Arrays as Functional Graphs',
-      subtitle: 'LeetCode 287: Find Duplicate Number in O(1) Space',
+      num: 'No. 006',
+      title: 'FUNCTIONAL GRAPHS',
+      subtitle: 'SPECIES: ARRAY DUPLICATE HUNTER',
+      sprite: <PixelBadge type="duplicate" size={32} />,
+      type: 'PIGEONHOLE / GRAPH',
+      stats: { height: 'LEETCODE 287', weight: 'O(1) SPACE', habitat: 'READ-ONLY ARRAY' },
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-300 leading-relaxed">
-            The problem statement: <em>Given array <code className="text-cyan-300">nums</code> of length n + 1 with elements in range [1, n], find the duplicate without modifying the array and with O(1) extra space.</em>
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
+          <p>
+            LeetCode 287: <em>Array of $n+1$ integers in range $[1, n]$. Find the duplicate without modifying array and using O(1) extra space.</em>
           </p>
 
-          <div className="p-4 rounded-xl bg-arcade-950 border border-arcade-800 text-xs font-mono space-y-2">
-            <div className="text-lime-accent font-bold">THE GRAPH MAPPING:</div>
-            <p className="text-slate-300 font-sans">
-              Treat each array index <code className="text-slate-200">i</code> as a node in a directed graph. 
-              The value stored at that index, <code className="text-slate-200">nums[i]</code>, represents the directed next pointer:
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
+            <strong className="font-pixel text-[9px] text-hare block mb-1">THE GRAPH MAPPING:</strong>
+            <p>
+              Treat array indices $i$ as graph vertices. The value $nums[i]$ acts as the directed edge:
+              <br />
+              <code className="p-1 bg-gb-forest text-gb-cream font-bold block my-1">
+                i &rarr; nums[i]
+              </code>
             </p>
-            <div className="p-2 rounded bg-arcade-900 text-cyan-300 font-bold">
-              i &rarr; nums[i]
-            </div>
-            <p className="text-slate-400 font-sans text-xs">
-              <strong>Pigeonhole Principle:</strong> With $n+1$ values mapped into $n$ distinct pigeonholes $[1, n]$, at least one value must repeat. 
-              A duplicate value means multiple distinct indices point to the same target index (in-degree &ge; 2). 
-              In a functional graph where every node has out-degree 1, an in-degree &ge; 2 is the entrance to a cycle! 
-              Floyd's cycle detection immediately pinpoints the duplicate value as the cycle entrance.
+            <p>
+              <strong>Pigeonhole Principle:</strong> $n+1$ values in $[1, n]$ forces at least one number to appear twice. 
+              Multiple indices point to the duplicate number (in-degree &ge; 2). In a functional graph with out-degree 1, an in-degree &ge; 2 is the entrance to a cycle! 
+              Floyd's algorithm locates it in $O(1)$ space.
             </p>
           </div>
         </div>
@@ -274,45 +244,48 @@ export const LearningSection: React.FC = () => {
     },
 
     {
-      id: 'complexity-table',
-      title: '07. Complexity Analysis Matrix',
-      subtitle: 'Rigorous Big-O Bounds Across All Applications',
+      num: 'No. 007',
+      title: 'BIG-O COMPLEXITY',
+      subtitle: 'SPECIES: PERFORMANCE INVARIANTS',
+      sprite: <PixelBadge type="detection" size={32} />,
+      type: 'BENCHMARK / MATRIX',
+      stats: { height: 'O(N) TIME', weight: 'O(1) SPACE', habitat: 'ALGORITHM ENGINE' },
       content: (
-        <div className="space-y-4">
+        <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border border-arcade-800 rounded-lg overflow-hidden">
-              <thead className="bg-arcade-950 text-slate-400 border-b border-arcade-800">
+            <table className="w-full border-2 border-gb-ink text-left font-pixel text-[8px] bg-gb-surface">
+              <thead className="bg-gb-olive text-gb-cream border-b-2 border-gb-ink">
                 <tr>
-                  <th className="p-3">Application</th>
-                  <th className="p-3">Time Complexity</th>
-                  <th className="p-3">Auxiliary Space</th>
-                  <th className="p-3">Hash Set Alternative</th>
+                  <th className="p-2">APPLICATION</th>
+                  <th className="p-2">TIME</th>
+                  <th className="p-2">SPACE</th>
+                  <th className="p-2">HASH SET</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-arcade-800 text-slate-300 bg-arcade-900/60">
+              <tbody className="divide-y divide-gb-ink text-gb-ink">
                 <tr>
-                  <td className="p-3 font-semibold text-white">Cycle Detection</td>
-                  <td className="p-3 text-lime-accent">O(N)</td>
-                  <td className="p-3 text-cyan-400">O(1) Constant</td>
-                  <td className="p-3 text-slate-400">O(N) Space</td>
+                  <td className="p-2 font-bold">CYCLE DETECT</td>
+                  <td className="p-2 text-retro-success">O(N)</td>
+                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-white">Cycle Entry Search</td>
-                  <td className="p-3 text-lime-accent">O(N)</td>
-                  <td className="p-3 text-cyan-400">O(1) Constant</td>
-                  <td className="p-3 text-slate-400">O(N) Space</td>
+                  <td className="p-2 font-bold">CYCLE ENTRY</td>
+                  <td className="p-2 text-retro-success">O(N)</td>
+                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-white">Find Middle Node</td>
-                  <td className="p-3 text-lime-accent">O(N)</td>
-                  <td className="p-3 text-cyan-400">O(1) Constant</td>
-                  <td className="p-3 text-slate-400">O(1) (2 passes)</td>
+                  <td className="p-2 font-bold">FIND MIDDLE</td>
+                  <td className="p-2 text-retro-success">O(N)</td>
+                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2">O(1) (2-PASS)</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-white">Find Duplicate Number</td>
-                  <td className="p-3 text-lime-accent">O(N)</td>
-                  <td className="p-3 text-cyan-400">O(1) Constant</td>
-                  <td className="p-3 text-slate-400">O(N) Space or modifies array</td>
+                  <td className="p-2 font-bold">FIND DUPLICATE</td>
+                  <td className="p-2 text-retro-success">O(N)</td>
+                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
               </tbody>
             </table>
@@ -323,70 +296,103 @@ export const LearningSection: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-arcade-900 border border-arcade-750 text-xs font-mono text-cyan-400 mb-2">
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>THEORY & MATHEMATICAL PROOFS</span>
+    <div className="max-w-6xl mx-auto px-4 py-8 select-none">
+      {/* Pokédex Header Bar */}
+      <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-6 h-6 rounded-full bg-cyan-400 border-2 border-gb-ink shadow-inner animate-pulse" />
+          <div className="flex gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 border border-gb-ink" />
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-gb-ink" />
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500 border border-gb-ink" />
+          </div>
+          <span className="font-pixel text-xs text-gb-cream">
+            POKÉDEX // ALGORITHM ENCYCLOPEDIA
+          </span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-          Master the Principles Behind the Algorithm
-        </h2>
-        <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-          Deep-dive into formal mathematical derivations, relative closing velocities, functional graphs, and time-space invariants.
-        </p>
+        <div className="font-pixel text-[9px] text-gb-pale">
+          ENTRIES RECORDED: 7 / 7
+        </div>
       </div>
 
-      {/* Main Learning Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Module Nav Column (4 cols) */}
+      {/* Pokédex Dual-Pane Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Pane (4 cols): Pokédex List */}
         <div className="lg:col-span-4 flex flex-col gap-2">
-          {modules.map((m, idx) => {
+          {pokedexEntries.map((entry, idx) => {
             const isCurrent = activeTab === idx;
             return (
               <button
-                key={m.id}
-                onClick={() => setActiveTab(idx)}
-                className={`flex items-center justify-between p-3.5 rounded-xl border text-left transition-all ${
+                key={entry.num}
+                onClick={() => {
+                  sound.playClick();
+                  setActiveTab(idx);
+                }}
+                className={`flex items-center justify-between p-3 border-2 transition-all text-left ${
                   isCurrent
-                    ? 'bg-arcade-850 border-lime-accent text-white shadow-glow-lime'
-                    : 'bg-arcade-900 border-arcade-800 text-slate-400 hover:text-slate-200 hover:border-arcade-700'
+                    ? 'bg-gb-cream text-gb-ink border-gb-ink shadow-pixel font-bold'
+                    : 'bg-gb-olive text-gb-cream border-gb-ink hover:bg-gb-leaf'
                 }`}
               >
                 <div>
-                  <div className="text-xs font-bold font-mono tracking-tight text-white mb-0.5">
-                    {m.title}
+                  <div className="font-pixel text-[8px] text-hare mb-0.5">
+                    {entry.num}
                   </div>
-                  <div className="text-[11px] text-slate-400">
-                    {m.subtitle}
+                  <div className="font-pixel text-[9px]">
+                    {entry.title}
                   </div>
                 </div>
-                <ChevronRight
-                  className={`w-4 h-4 shrink-0 transition-transform ${
-                    isCurrent ? 'text-lime-accent translate-x-1' : 'text-slate-600'
-                  }`}
-                />
+                <span className={isCurrent ? 'text-hare animate-bounce-pixel' : 'text-gb-pale'}>
+                  ▶
+                </span>
               </button>
             );
           })}
         </div>
 
-        {/* Content Viewer Column (8 cols) */}
-        <div className="lg:col-span-8 p-6 bg-arcade-900 border border-arcade-800 rounded-2xl shadow-xl">
-          <div className="border-b border-arcade-800 pb-4 mb-5">
-            <span className="text-xs font-mono text-lime-accent uppercase tracking-wider font-semibold">
-              Module {activeTab + 1} of {modules.length}
-            </span>
-            <h3 className="text-xl font-bold text-white mt-1">
-              {modules[activeTab].title}
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              {modules[activeTab].subtitle}
-            </p>
+        {/* Right Pane (8 cols): Pokédex CRT Data Display */}
+        <div className="lg:col-span-8 rpg-box p-6 border-4 border-gb-ink shadow-pixel">
+          {/* Top Data Bar */}
+          <div className="flex items-center justify-between border-b-2 border-gb-ink pb-3 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-1 bg-gb-surface border-2 border-gb-ink">
+                {pokedexEntries[activeTab].sprite}
+              </div>
+              <div>
+                <span className="font-pixel text-[8px] text-hare">
+                  {pokedexEntries[activeTab].num}
+                </span>
+                <h3 className="font-pixel text-sm text-gb-ink">
+                  {pokedexEntries[activeTab].title}
+                </h3>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <span className="font-pixel text-[8px] px-2 py-0.5 bg-gb-forest text-gb-cream border border-gb-ink block">
+                {pokedexEntries[activeTab].type}
+              </span>
+            </div>
           </div>
 
-          <div>{modules[activeTab].content}</div>
+          {/* Stat Specs */}
+          <div className="grid grid-cols-3 gap-2 p-2 bg-gb-surface border-2 border-gb-ink font-pixel text-[8px] text-gb-ink mb-4 text-center">
+            <div>
+              <span className="text-gb-forest opacity-70 block">HT / SPEED:</span>
+              <span className="font-bold">{pokedexEntries[activeTab].stats.height}</span>
+            </div>
+            <div>
+              <span className="text-gb-forest opacity-70 block">WT / SPACE:</span>
+              <span className="font-bold text-retro-success">{pokedexEntries[activeTab].stats.weight}</span>
+            </div>
+            <div>
+              <span className="text-gb-forest opacity-70 block">HABITAT:</span>
+              <span className="font-bold text-hare truncate block">{pokedexEntries[activeTab].stats.habitat}</span>
+            </div>
+          </div>
+
+          {/* Main Pokédex Content */}
+          <div>{pokedexEntries[activeTab].content}</div>
         </div>
       </div>
     </div>

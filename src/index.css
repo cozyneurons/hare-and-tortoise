@@ -4,71 +4,164 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light dark;
   }
 
   body {
-    background-color: #070a10;
+    background-color: #183C32;
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(16, 245, 122, 0.04) 0%, transparent 50%),
-      radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.03) 0%, transparent 40%),
-      radial-gradient(circle at 15% 70%, rgba(245, 158, 11, 0.03) 0%, transparent 40%),
-      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+      radial-gradient(#386641 15%, transparent 16%),
+      radial-gradient(#2d5537 15%, transparent 16%);
+    background-size: 32px 32px;
+    background-position: 0 0, 16px 16px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
 }
 
-/* Custom scrollbars */
+/* Original Game Boy DMG-01 Monochrome Filter Theme */
+.dmg-mono {
+  filter: sepia(0.8) hue-rotate(45deg) saturate(2.5) contrast(1.15) brightness(0.95);
+}
+
+/* Custom retro scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d131f;
+  background: #183C32;
+  border-left: 2px solid #0D1F18;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a233a;
-  border-radius: 3px;
+  background: #6A994E;
+  border: 2px solid #0D1F18;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2e3e65;
+  background: #A7C957;
 }
 
-/* Subtle arcade grid overlay */
-.arcade-grid {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-}
-
-.radar-sweep {
+/* Classic RPG Dialogue Box with double-lined pixel border */
+.rpg-box {
+  background-color: #F2E8CF;
+  color: #0D1F18;
+  border: 4px solid #0D1F18;
+  box-shadow: 
+    inset -3px -3px 0px 0px #D8CCA8,
+    inset 3px 3px 0px 0px #FFFFFF,
+    4px 4px 0px 0px rgba(0, 0, 0, 0.4);
   position: relative;
-  overflow: hidden;
 }
 
-.radar-sweep::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(16, 245, 122, 0.08), transparent);
-  animation: sweep 3.5s infinite linear;
+.rpg-box-dark {
+  background-color: #183C32;
+  color: #F2E8CF;
+  border: 4px solid #0D1F18;
+  box-shadow: 
+    inset -3px -3px 0px 0px #0E241E,
+    inset 3px 3px 0px 0px #386641,
+    4px 4px 0px 0px rgba(0, 0, 0, 0.4);
+  position: relative;
 }
 
-@keyframes sweep {
-  0% { left: -100%; }
-  100% { left: 100%; }
+.rpg-panel-cream {
+  background-color: #FAF7EE;
+  color: #0D1F18;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
 }
 
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(16, 245, 122, 0.4)); }
-  50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(16, 245, 122, 0.8)); }
+/* Classic Game Boy Push Button */
+.pixel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 8px 14px;
+  background-color: #A7C957;
+  color: #0D1F18;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  user-select: none;
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 2s infinite ease-in-out;
+.pixel-btn:hover {
+  background-color: #b9dc69;
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #0D1F18;
+}
+
+.pixel-btn-secondary {
+  background-color: #F2E8CF;
+  color: #0D1F18;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
+}
+.pixel-btn-secondary:hover {
+  background-color: #ffffff;
+}
+
+.pixel-btn-danger {
+  background-color: #E63946;
+  color: #FFFFFF;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
+}
+.pixel-btn-danger:hover {
+  background-color: #ff4d5a;
+}
+
+.pixel-btn-hare {
+  background-color: #E76F51;
+  color: #FFFFFF;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
+}
+
+.pixel-btn-tortoise {
+  background-color: #2A9D8F;
+  color: #FFFFFF;
+  border: 3px solid #0D1F18;
+  box-shadow: 3px 3px 0px 0px #0D1F18;
+}
+
+/* Dialogue Advance Arrow */
+.dialogue-arrow {
+  display: inline-block;
+  animation: bounceArrow 0.6s infinite steps(2);
+  color: #E63946;
+}
+
+@keyframes bounceArrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+/* Lab tile flooring */
+.lab-floor {
+  background-color: #2d5537;
+  background-image: 
+    linear-gradient(45deg, #24462c 25%, transparent 25%), 
+    linear-gradient(-45deg, #24462c 25%, transparent 25%), 
+    linear-gradient(45deg, transparent 75%, #24462c 75%), 
+    linear-gradient(-45deg, transparent 75%, #24462c 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+}
+
+/* Overworld grass tile pattern */
+.grass-overworld {
+  background-color: #386641;
+  background-image: 
+    radial-gradient(#4d8058 20%, transparent 20%),
+    radial-gradient(#2d5537 20%, transparent 20%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
 }

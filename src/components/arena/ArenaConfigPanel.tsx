@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 import { AlgorithmMode } from '../../types/simulation';
 import { MiddleConvention } from '../../algorithms/findMiddle';
 import { validateDuplicateArray } from '../../algorithms/findDuplicate';
-import { Settings2, Shuffle, CheckCircle, AlertCircle } from 'lucide-react';
+import { sound } from '../../utils/audio';
 
 interface ArenaConfigPanelProps {
   mode: AlgorithmMode;
   onModeChange: (mode: AlgorithmMode) => void;
-  // Node configs
   nodeCount: number;
   onNodeCountChange: (count: number) => void;
   cyclePos: number;
   onCyclePosChange: (pos: number) => void;
-  // Middle convention
   middleConvention: MiddleConvention;
   onMiddleConventionChange: (conv: MiddleConvention) => void;
-  // Duplicate array
   duplicateArray: number[];
   onDuplicateArrayChange: (nums: number[]) => void;
 }
@@ -38,31 +35,30 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
   const MODES: { id: AlgorithmMode; label: string; badge: string; desc: string }[] = [
     {
       id: 'cycle-detection',
-      label: '01 Floyd Cycle Detection',
-      badge: 'DETECTION',
-      desc: 'Detect whether a loop exists in a singly linked list',
+      label: 'CART 01 // CYCLE DETECT',
+      badge: 'PHASE-1',
+      desc: 'Detect closed loops in singly linked list',
     },
     {
       id: 'cycle-entry',
-      label: '02 Cycle Entry Point',
+      label: 'CART 02 // CYCLE ENTRY',
       badge: 'TWO-PHASE',
-      desc: 'Locate the exact starting node of the cycle',
+      desc: 'Pinpoint cycle start node with mu = m*lambda - k',
     },
     {
       id: 'find-middle',
-      label: '03 Find Middle Node',
-      badge: 'SINGLE-PASS',
-      desc: 'Find the middle node without knowing list length',
+      label: 'CART 03 // FIND MIDDLE',
+      badge: '1-PASS',
+      desc: 'Traverse list at 2x:1x to identify middle',
     },
     {
       id: 'find-duplicate',
-      label: '04 Find Duplicate Number',
-      badge: 'FUNCTIONAL GRAPH',
-      desc: 'Array of n+1 integers in [1, n] as a graph',
+      label: 'CART 04 // DUPE HUNTER',
+      badge: 'GRAPH',
+      desc: 'Map array values as directed functional graph',
     },
   ];
 
-  // Handle duplicate text submit
   const handleDupInputChange = (text: string) => {
     setDupInputText(text);
     const parsed = text
@@ -85,19 +81,14 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
     }
   };
 
-  // Generate random valid duplicate array
   const generateRandomDuplicateArray = () => {
-    const n = Math.floor(Math.random() * 5) + 3; // n from 3 to 7
+    sound.playClick();
+    const n = Math.floor(Math.random() * 5) + 3;
     const duplicate = Math.floor(Math.random() * n) + 1;
-    const arr: number[] = [];
-
-    // Fill array of length n+1 with numbers in [1, n] ensuring duplicate occurs at least twice
-    arr.push(duplicate);
-    arr.push(duplicate);
+    const arr: number[] = [duplicate, duplicate];
     while (arr.length < n + 1) {
       arr.push(Math.floor(Math.random() * n) + 1);
     }
-    // Shuffle
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -109,16 +100,16 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-arcade-900 border border-arcade-800 rounded-xl shadow-xl">
-      {/* Mode Selector Tabs */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <Settings2 className="w-4 h-4 text-lime-accent" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-              ALGORITHM ARENA MODE
-            </span>
-          </div>
+    <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel text-gb-cream select-none">
+      {/* Cartridge Selection Slot */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between border-b-2 border-gb-ink pb-2 mb-3">
+          <span className="font-pixel text-[10px] text-gb-pale">
+            INSERT ALGORITHM CARTRIDGE:
+          </span>
+          <span className="font-pixel text-[8px] text-hare">
+            GBC LAB CONSOLE
+          </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
@@ -127,45 +118,44 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
             return (
               <button
                 key={m.id}
-                onClick={() => onModeChange(m.id)}
-                className={`flex flex-col items-start p-2.5 rounded-lg border text-left transition-all ${
+                onClick={() => {
+                  sound.playClick();
+                  onModeChange(m.id);
+                }}
+                className={`p-2.5 text-left border-2 transition-all ${
                   isSelected
-                    ? 'bg-arcade-850 border-lime-accent text-white shadow-glow-lime'
-                    : 'bg-arcade-950/60 border-arcade-800 text-slate-400 hover:text-slate-200 hover:border-arcade-700'
+                    ? 'bg-gb-cream text-gb-ink border-gb-ink shadow-pixel-sm font-bold'
+                    : 'bg-gb-olive/70 text-gb-cream border-gb-ink hover:bg-gb-leaf/60'
                 }`}
               >
-                <div className="flex items-center justify-between w-full mb-1">
-                  <span className="text-xs font-bold font-mono tracking-tight text-white">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-pixel text-[9px] tracking-tight">
                     {m.label}
                   </span>
-                  <span
-                    className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
-                      isSelected
-                        ? 'bg-lime-accent/20 text-lime-accent font-semibold'
-                        : 'bg-arcade-800 text-slate-400'
-                    }`}
-                  >
+                  <span className={`px-1 py-0.5 text-[7px] font-pixel border border-gb-ink ${
+                    isSelected ? 'bg-hare text-white' : 'bg-gb-forest text-gb-pale'
+                  }`}>
                     {m.badge}
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-400 leading-snug line-clamp-2">
+                <div className="font-vt323 text-base text-gb-ink/80 leading-tight">
                   {m.desc}
-                </span>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Mode Specific Controls */}
-      <div className="border-t border-arcade-800/80 pt-3">
+      {/* Mode Specific Laboratory Parameters */}
+      <div className="border-t-2 border-gb-ink pt-3">
         {(mode === 'cycle-detection' || mode === 'cycle-entry') && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Node count slider */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-slate-400">TOTAL NODES:</span>
-                <span className="text-lime-accent font-bold">{nodeCount} Nodes</span>
+            {/* Total nodes slider */}
+            <div className="p-3 bg-gb-forest border-2 border-gb-ink">
+              <div className="flex justify-between items-center font-pixel text-[9px] mb-2 text-gb-pale">
+                <span>TOTAL NODES:</span>
+                <span className="text-hare font-bold">{nodeCount} NODES</span>
               </div>
               <input
                 type="range"
@@ -179,20 +169,20 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                     onCyclePosChange(Math.max(-1, val - 1));
                   }
                 }}
-                className="w-full h-1.5 bg-arcade-800 rounded-lg appearance-none cursor-pointer accent-lime-accent"
+                className="w-full accent-hare cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>3 nodes</span>
-                <span>12 nodes</span>
+              <div className="flex justify-between text-[8px] font-pixel text-gb-pale/75 mt-1">
+                <span>3 MIN</span>
+                <span>12 MAX</span>
               </div>
             </div>
 
             {/* Cycle Position slider */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-slate-400">CYCLE START NODE:</span>
-                <span className="text-tortoise-cyan font-bold">
-                  {cyclePos === -1 ? 'None (No Cycle)' : `Node #${cyclePos} (Loop Length ${nodeCount - cyclePos})`}
+            <div className="p-3 bg-gb-forest border-2 border-gb-ink">
+              <div className="flex justify-between items-center font-pixel text-[9px] mb-2 text-gb-pale">
+                <span>CYCLE ENTRY NODE:</span>
+                <span className="text-tortoise font-bold">
+                  {cyclePos === -1 ? 'NONE (NO LOOP)' : `NODE #${cyclePos}`}
                 </span>
               </div>
               <input
@@ -201,52 +191,56 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                 max={nodeCount - 1}
                 value={cyclePos}
                 onChange={(e) => onCyclePosChange(Number(e.target.value))}
-                className="w-full h-1.5 bg-arcade-800 rounded-lg appearance-none cursor-pointer accent-tortoise-cyan"
+                className="w-full accent-tortoise cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>-1 (No Cycle)</span>
-                <span>Node #{nodeCount - 1}</span>
+              <div className="flex justify-between text-[8px] font-pixel text-gb-pale/75 mt-1">
+                <span>-1 NO CYCLE</span>
+                <span>NODE #{nodeCount - 1}</span>
               </div>
             </div>
 
             {/* Quick Presets */}
             <div className="md:col-span-2 flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[11px] font-mono text-slate-500 mr-1">PRESETS:</span>
+              <span className="font-pixel text-[8px] text-gb-pale mr-1">PRESETS:</span>
               <button
                 onClick={() => {
+                  sound.playClick();
                   onNodeCountChange(7);
                   onCyclePosChange(2);
                 }}
-                className="px-2 py-1 text-[11px] font-mono rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300"
+                className="pixel-btn pixel-btn-secondary !py-1 !px-2 !text-[8px]"
               >
-                Classic Loop (7 nodes, entry #2)
+                CLASSIC LOOP (#2)
               </button>
               <button
                 onClick={() => {
+                  sound.playClick();
                   onNodeCountChange(6);
                   onCyclePosChange(0);
                 }}
-                className="px-2 py-1 text-[11px] font-mono rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300"
+                className="pixel-btn pixel-btn-secondary !py-1 !px-2 !text-[8px]"
               >
-                Full Ring (Entry at Head #0)
+                HEAD LOOP (#0)
               </button>
               <button
                 onClick={() => {
+                  sound.playClick();
                   onNodeCountChange(5);
                   onCyclePosChange(4);
                 }}
-                className="px-2 py-1 text-[11px] font-mono rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300"
+                className="pixel-btn pixel-btn-secondary !py-1 !px-2 !text-[8px]"
               >
-                Tail Self-Loop (#4)
+                TAIL SELF-LOOP (#4)
               </button>
               <button
                 onClick={() => {
+                  sound.playClick();
                   onNodeCountChange(6);
                   onCyclePosChange(-1);
                 }}
-                className="px-2 py-1 text-[11px] font-mono rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300"
+                className="pixel-btn pixel-btn-secondary !py-1 !px-2 !text-[8px]"
               >
-                Strictly Linear (No Cycle)
+                NO CYCLE (LINEAR)
               </button>
             </div>
           </div>
@@ -255,12 +249,10 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
         {mode === 'find-middle' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Node count slider */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-slate-400">LINKED LIST LENGTH:</span>
-                <span className="text-lime-accent font-bold">
-                  {nodeCount} Nodes ({nodeCount % 2 === 0 ? 'EVEN' : 'ODD'})
-                </span>
+            <div className="p-3 bg-gb-forest border-2 border-gb-ink">
+              <div className="flex justify-between items-center font-pixel text-[9px] mb-2 text-gb-pale">
+                <span>LIST LENGTH:</span>
+                <span className="text-hare font-bold">{nodeCount} NODES ({nodeCount % 2 === 0 ? 'EVEN' : 'ODD'})</span>
               </div>
               <input
                 type="range"
@@ -268,40 +260,41 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                 max={12}
                 value={nodeCount}
                 onChange={(e) => onNodeCountChange(Number(e.target.value))}
-                className="w-full h-1.5 bg-arcade-800 rounded-lg appearance-none cursor-pointer accent-lime-accent"
+                className="w-full accent-hare cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] font-mono text-slate-500">
-                <span>1 node</span>
-                <span>12 nodes</span>
-              </div>
             </div>
 
-            {/* Middle Convention Selector */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex justify-between items-center text-xs font-mono">
-                <span className="text-slate-400">EVEN-LENGTH CONVENTION:</span>
-                <span className="text-cyan-400 font-bold uppercase">{middleConvention} Middle</span>
+            {/* Middle Convention */}
+            <div className="p-3 bg-gb-forest border-2 border-gb-ink">
+              <div className="font-pixel text-[9px] mb-2 text-gb-pale">
+                EVEN LENGTH CONVENTION:
               </div>
               <div className="flex gap-2">
                 <button
-                  onClick={() => onMiddleConventionChange('second')}
-                  className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-medium border transition-all ${
+                  onClick={() => {
+                    sound.playClick();
+                    onMiddleConventionChange('second');
+                  }}
+                  className={`flex-1 py-1.5 px-2 font-pixel text-[8px] border-2 border-gb-ink ${
                     middleConvention === 'second'
-                      ? 'bg-arcade-850 border-cyan-500 text-cyan-300 shadow-glow-tortoise'
-                      : 'bg-arcade-950 border-arcade-800 text-slate-400'
+                      ? 'bg-gb-cream text-gb-ink font-bold shadow-pixel-sm'
+                      : 'bg-gb-olive text-gb-cream'
                   }`}
                 >
-                  Second Middle &lfloor;N/2&rfloor; (Standard)
+                  SECOND MIDDLE &lfloor;N/2&rfloor;
                 </button>
                 <button
-                  onClick={() => onMiddleConventionChange('first')}
-                  className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-medium border transition-all ${
+                  onClick={() => {
+                    sound.playClick();
+                    onMiddleConventionChange('first');
+                  }}
+                  className={`flex-1 py-1.5 px-2 font-pixel text-[8px] border-2 border-gb-ink ${
                     middleConvention === 'first'
-                      ? 'bg-arcade-850 border-cyan-500 text-cyan-300 shadow-glow-tortoise'
-                      : 'bg-arcade-950 border-arcade-800 text-slate-400'
+                      ? 'bg-gb-cream text-gb-ink font-bold shadow-pixel-sm'
+                      : 'bg-gb-olive text-gb-cream'
                   }`}
                 >
-                  First Middle &lfloor;(N-1)/2&rfloor;
+                  FIRST MIDDLE &lfloor;(N-1)/2&rfloor;
                 </button>
               </div>
             </div>
@@ -309,20 +302,16 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
         )}
 
         {mode === 'find-duplicate' && (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-xs font-mono text-slate-300">
-                <span>ARRAY OF N+1 INTEGERS (RANGE [1, N]):</span>
-                <span className="text-[10px] text-slate-500 font-sans">
-                  (Comma-separated)
-                </span>
-              </div>
+              <span className="font-pixel text-[9px] text-gb-pale">
+                ARRAY OF N+1 INTEGERS (RANGE [1, N]):
+              </span>
               <button
                 onClick={generateRandomDuplicateArray}
-                className="flex items-center gap-1 px-2.5 py-1 text-xs font-mono rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-lime-accent transition-all active:scale-95"
+                className="pixel-btn pixel-btn-secondary !py-1 !px-2 !text-[8px]"
               >
-                <Shuffle className="w-3.5 h-3.5" />
-                <span>Random Input</span>
+                🎲 RANDOM ARRAY
               </button>
             </div>
 
@@ -332,30 +321,24 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                 value={dupInputText}
                 onChange={(e) => handleDupInputChange(e.target.value)}
                 placeholder="e.g. 1, 3, 4, 2, 2"
-                className="flex-1 px-3 py-2 bg-arcade-950 border border-arcade-800 rounded-lg font-mono text-sm text-slate-100 focus:outline-none focus:border-lime-accent"
+                className="flex-1 px-3 py-1.5 bg-gb-cream border-2 border-gb-ink font-vt323 text-2xl text-gb-ink focus:outline-none"
               />
-              {dupError ? (
-                <div className="flex items-center gap-1 text-xs text-rose-400 font-mono">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>Invalid</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-1 text-xs text-lime-accent font-mono">
-                  <CheckCircle className="w-4 h-4 shrink-0" />
-                  <span>Valid</span>
-                </div>
-              )}
+              <span className={`px-2 py-1 font-pixel text-[8px] border-2 border-gb-ink ${
+                dupError ? 'bg-retro-error text-white' : 'bg-retro-success text-white'
+              }`}>
+                {dupError ? 'ERROR' : 'VALID'}
+              </span>
             </div>
 
             {dupError && (
-              <div className="text-xs text-rose-400 font-mono bg-rose-950/40 border border-rose-900/60 p-2 rounded">
+              <div className="p-2 bg-retro-error/20 border-2 border-retro-error text-retro-error font-vt323 text-lg">
                 {dupError}
               </div>
             )}
 
             {/* Presets */}
-            <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
-              <span className="text-slate-500">PRESETS:</span>
+            <div className="flex flex-wrap items-center gap-1.5 text-xs">
+              <span className="font-pixel text-[8px] text-gb-pale">PRESETS:</span>
               {[
                 [1, 3, 4, 2, 2],
                 [3, 1, 3, 4, 2],
@@ -365,12 +348,12 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                 <button
                   key={`preset-${idx}`}
                   onClick={() => {
-                    const str = preset.join(', ');
-                    setDupInputText(str);
+                    sound.playClick();
+                    setDupInputText(preset.join(', '));
                     setDupError(null);
                     onDuplicateArrayChange(preset);
                   }}
-                  className="px-2 py-0.5 rounded bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300"
+                  className="px-2 py-0.5 bg-gb-olive border border-gb-ink font-pixel text-[8px] text-gb-cream hover:bg-gb-leaf"
                 >
                   [{preset.join(',')}]
                 </button>

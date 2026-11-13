@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Compass, 
-  BookOpen, 
-  Trophy, 
-  BarChart3, 
-  Home, 
-  Volume2, 
-  VolumeX, 
-  Menu, 
-  X,
-  Play
-} from 'lucide-react';
+import { PixelHareSprite, PixelTortoiseSprite } from '../pixel/PixelSprites';
 import { sound } from '../../utils/audio';
 
 export type NavTab = 'home' | 'arena' | 'learn' | 'challenges' | 'complexity';
@@ -20,6 +9,8 @@ interface NavbarProps {
   onTabChange: (tab: NavTab) => void;
   isMuted: boolean;
   onToggleMute: () => void;
+  isDmgMode: boolean;
+  onToggleDmgMode: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -27,15 +18,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   onTabChange,
   isMuted,
   onToggleMute,
+  isDmgMode,
+  onToggleDmgMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks: { id: NavTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'home', label: 'HOME', icon: <Home className="w-4 h-4" /> },
-    { id: 'arena', label: 'ARENA', icon: <Compass className="w-4 h-4" /> },
-    { id: 'learn', label: 'LEARN', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'challenges', label: 'CHALLENGES', icon: <Trophy className="w-4 h-4" /> },
-    { id: 'complexity', label: 'COMPLEXITY', icon: <BarChart3 className="w-4 h-4" /> },
+  const navLinks: { id: NavTab; label: string; icon: string }[] = [
+    { id: 'home', label: 'OVERWORLD', icon: '🏡' },
+    { id: 'arena', label: 'LAB (ARENA)', icon: '🔬' },
+    { id: 'learn', label: 'POKÉDEX', icon: '📖' },
+    { id: 'challenges', label: 'BATTLE', icon: '⚔️' },
+    { id: 'complexity', label: 'TRAINER', icon: '📇' },
   ];
 
   const handleNavClick = (tab: NavTab) => {
@@ -45,109 +38,135 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-arcade-950/85 backdrop-blur-md border-b border-arcade-800">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full bg-gb-forest border-b-4 border-gb-ink shadow-pixel select-none">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between">
         {/* Logo / Brand */}
         <div
           onClick={() => handleNavClick('home')}
           className="flex items-center gap-2.5 cursor-pointer group"
         >
-          <div className="w-9 h-9 rounded-lg bg-arcade-900 border border-arcade-750 flex items-center justify-center font-mono font-black text-lime-accent text-base group-hover:border-lime-accent group-hover:shadow-glow-lime transition-all duration-200">
-            C//L
+          {/* Retro Pixel Emblem */}
+          <div className="flex items-center -space-x-1 p-1 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
+            <PixelTortoiseSprite size={20} />
+            <PixelHareSprite size={20} />
           </div>
+
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold font-mono tracking-wider text-white text-base">
-                CHASE<span className="text-lime-accent">//</span>LOOP
+            <div className="flex items-center gap-2">
+              <span className="font-pixel text-xs sm:text-sm text-gb-cream tracking-tight group-hover:text-gb-pale transition-colors">
+                CHASE<span className="text-hare">::</span>LOOP
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-lime-accent animate-ping" />
+              <span className="text-[9px] font-pixel px-1.5 py-0.5 bg-gb-leaf border border-gb-ink text-gb-cream hidden sm:inline-block">
+                GBC
+              </span>
             </div>
-            <div className="text-[10px] font-mono text-slate-400 tracking-tight -mt-1 hidden sm:block">
-              HARE &amp; TORTOISE LAB
+            <div className="text-xs font-vt323 text-gb-pale tracking-wider hidden sm:block">
+              ★ TWO POINTERS HANDHELD LAB ★
             </div>
           </div>
         </div>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 bg-arcade-900/90 p-1 rounded-xl border border-arcade-800 font-mono text-xs">
+        {/* Desktop Nav Menu - Styled like classic Game Boy menu bar */}
+        <nav className="hidden md:flex items-center gap-1.5 bg-gb-olive/80 p-1 border-2 border-gb-ink shadow-pixel-sm">
           {navLinks.map((link) => {
             const isActive = activeTab === link.id;
             return (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg transition-all font-semibold ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 font-pixel text-[10px] tracking-wide transition-all ${
                   isActive
-                    ? 'bg-arcade-850 text-lime-accent border border-lime-accent/40 shadow-glow-lime'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-arcade-850/50'
+                    ? 'bg-gb-cream text-gb-ink border-2 border-gb-ink shadow-pixel-sm font-bold'
+                    : 'text-gb-cream hover:bg-gb-leaf/50 hover:text-white'
                 }`}
               >
-                {link.icon}
+                <span className={isActive ? 'text-hare animate-bounce-pixel' : 'text-gb-pale'}>
+                  {isActive ? '▶' : ' '}
+                </span>
                 <span>{link.label}</span>
               </button>
             );
           })}
         </nav>
 
-        {/* Actions: Arena Quick CTA + Audio Mute */}
-        <div className="hidden sm:flex items-center gap-3">
-          {/* Quick Audio Mute */}
+        {/* Retro Hardware Toggles: Sound & DMG Monochrome */}
+        <div className="hidden sm:flex items-center gap-2">
+          {/* DMG-01 Monochrome Palette Toggle */}
           <button
-            onClick={onToggleMute}
-            title={isMuted ? 'Unmute Audio (M)' : 'Mute Audio (M)'}
-            className={`p-2 rounded-lg border transition-all ${
-              isMuted
-                ? 'bg-arcade-900 border-arcade-800 text-slate-500'
-                : 'bg-arcade-900 border-cyan-500/40 text-cyan-400 shadow-glow-tortoise'
+            onClick={() => {
+              sound.playClick();
+              onToggleDmgMode();
+            }}
+            title="Toggle Game Boy DMG-01 Monochrome Palette"
+            className={`px-2.5 py-1.5 font-pixel text-[9px] border-2 border-gb-ink shadow-pixel-sm transition-all ${
+              isDmgMode
+                ? 'bg-dmg-lightest text-dmg-darkest font-bold'
+                : 'bg-gb-olive text-gb-cream hover:bg-gb-leaf'
             }`}
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isDmgMode ? '📟 DMG MONO' : '🎨 GBC COLOR'}
           </button>
 
-          {activeTab !== 'arena' && (
-            <button
-              onClick={() => handleNavClick('arena')}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-lime-accent hover:bg-lime-400 text-arcade-950 font-bold text-xs font-mono transition-all duration-150 active:scale-95 shadow-glow-lime"
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>SIMULATOR</span>
-            </button>
-          )}
+          {/* Sound FX Toggle */}
+          <button
+            onClick={() => {
+              onToggleMute();
+            }}
+            title={isMuted ? 'Turn Sound ON' : 'Turn Sound OFF'}
+            className={`px-2.5 py-1.5 font-pixel text-[9px] border-2 border-gb-ink shadow-pixel-sm transition-all ${
+              isMuted
+                ? 'bg-gb-forest text-gb-pale opacity-70'
+                : 'bg-gb-pale text-gb-ink font-bold'
+            }`}
+          >
+            {isMuted ? '🔇 BEEP OFF' : '🔊 8-BIT BEEP'}
+          </button>
         </div>
 
         {/* Mobile Hamburger Button */}
         <div className="flex md:hidden items-center gap-2">
           <button
-            onClick={onToggleMute}
-            className="p-2 rounded-lg bg-arcade-900 border border-arcade-800 text-slate-400"
+            onClick={() => {
+              sound.playClick();
+              onToggleDmgMode();
+            }}
+            className="px-2 py-1 font-pixel text-[8px] bg-gb-olive text-gb-cream border-2 border-gb-ink"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+            {isDmgMode ? 'DMG' : 'GBC'}
+          </button>
+          <button
+            onClick={() => {
+              onToggleMute();
+            }}
+            className="p-1.5 font-pixel text-[9px] bg-gb-olive text-gb-cream border-2 border-gb-ink"
+          >
+            {isMuted ? '🔇' : '🔊'}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg bg-arcade-900 border border-arcade-800 text-slate-300"
+            className="px-2.5 py-1 font-pixel text-[10px] bg-gb-cream text-gb-ink border-2 border-gb-ink shadow-pixel-sm"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? '✕' : 'MENU'}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-arcade-950 border-b border-arcade-800 px-4 py-3 space-y-1 font-mono text-xs">
+        <div className="md:hidden bg-gb-cream border-t-2 border-gb-ink p-3 space-y-2 text-gb-ink font-pixel text-xs">
           {navLinks.map((link) => {
             const isActive = activeTab === link.id;
             return (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className={`flex items-center gap-2 w-full p-2.5 rounded-lg text-left transition-all ${
+                className={`flex items-center gap-2 w-full p-2 border-2 text-left ${
                   isActive
-                    ? 'bg-arcade-850 text-lime-accent font-bold border border-lime-accent/30'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-gb-pale border-gb-ink font-bold shadow-pixel-sm'
+                    : 'border-transparent hover:bg-gb-forest/10'
                 }`}
               >
-                {link.icon}
+                <span className="text-hare">{isActive ? '▶' : ' '}</span>
                 <span>{link.label}</span>
               </button>
             );

@@ -8,52 +8,68 @@ export default {
   theme: {
     extend: {
       colors: {
-        arcade: {
-          950: '#070a10',
-          900: '#0d131f',
-          850: '#121929',
-          800: '#1a233a',
-          750: '#23304e',
-          700: '#2e3e65',
-          600: '#425585',
-          500: '#6479a8',
-          400: '#94a3c4',
-          300: '#c2cce0',
-          100: '#edf2fb',
-        },
-        lime: {
-          accent: '#10f57a',
-          glow: '#00ff87',
-          dim: '#0a8043',
+        gb: {
+          forest: '#183C32',
+          olive: '#386641',
+          leaf: '#6A994E',
+          pale: '#A7C957',
+          cream: '#F2E8CF',
+          surface: '#FAF7EE',
+          ink: '#0D1F18',
+          border: '#183C32',
         },
         hare: {
-          DEFAULT: '#f59e0b',
-          glow: '#fbbf24',
-          dim: '#b45309',
-          bg: 'rgba(245, 158, 11, 0.12)',
+          DEFAULT: '#E76F51',
+          light: '#F4A261',
+          dark: '#B04228',
+          bg: 'rgba(231, 111, 81, 0.15)',
         },
         tortoise: {
-          DEFAULT: '#06b6d4',
-          glow: '#38bdf8',
-          dim: '#0891b2',
-          bg: 'rgba(6, 182, 212, 0.12)',
+          DEFAULT: '#2A9D8F',
+          light: '#48CAE4',
+          dark: '#264653',
+          bg: 'rgba(42, 157, 143, 0.15)',
         },
+        retro: {
+          success: '#38B000',
+          warning: '#E9C46A',
+          error: '#E63946',
+          purple: '#7209B7',
+        },
+        dmg: {
+          darkest: '#0f380f',
+          dark: '#306230',
+          light: '#8bac0f',
+          lightest: '#9bbc0f',
+        }
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'SF Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
-        display: ['Space Grotesk', 'Plus Jakarta Sans', 'sans-serif'],
+        pixel: ['"Press Start 2P"', 'monospace'],
+        vt323: ['"VT323"', 'monospace'],
+        mono: ['"VT323"', '"JetBrains Mono"', 'monospace'],
+        sans: ['"VT323"', 'sans-serif'],
       },
       boxShadow: {
-        'glow-lime': '0 0 20px -3px rgba(16, 245, 122, 0.35)',
-        'glow-hare': '0 0 20px -3px rgba(245, 158, 11, 0.35)',
-        'glow-tortoise': '0 0 20px -3px rgba(6, 182, 212, 0.35)',
-        'glow-collision': '0 0 30px 4px rgba(236, 72, 153, 0.45)',
-        'arcade-card': '0 8px 32px -8px rgba(0, 0, 0, 0.7), 0 0 1px 1px rgba(255, 255, 255, 0.05)',
+        'pixel-sm': '2px 2px 0px 0px #0D1F18',
+        'pixel': '4px 4px 0px 0px #0D1F18',
+        'pixel-lg': '6px 6px 0px 0px #0D1F18',
+        'pixel-inset': 'inset 2px 2px 0px 0px rgba(0,0,0,0.2)',
+        'pixel-btn': '3px 3px 0px 0px #183C32',
+        'pixel-btn-pressed': '1px 1px 0px 0px #183C32',
       },
       animation: {
-        'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'bounce-pixel': 'bouncePixel 0.8s infinite steps(2)',
+        'blink': 'blink 0.7s infinite steps(1)',
+      },
+      keyframes: {
+        bouncePixel: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-3px)' },
+        },
+        blink: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0' },
+        }
       }
     },
   },

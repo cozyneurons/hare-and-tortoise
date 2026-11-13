@@ -1,14 +1,4 @@
-import React from 'react';
-import { 
-  Play, 
-  Pause, 
-  SkipForward, 
-  SkipBack, 
-  RotateCcw, 
-  Volume2, 
-  VolumeX, 
-  Keyboard
-} from 'lucide-react';
+import React, { useState } from 'react';
 import { sound } from '../../utils/audio';
 
 interface SimulatorControlsProps {
@@ -28,7 +18,7 @@ interface SimulatorControlsProps {
   onStepSeek: (stepIndex: number) => void;
 }
 
-const SPEED_OPTIONS = [0.25, 0.5, 1, 1.5, 2, 3];
+const SPEED_OPTIONS = [0.5, 1, 1.5, 2, 3];
 
 export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
   isPlaying,
@@ -46,89 +36,87 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
   onMuteToggle,
   onStepSeek,
 }) => {
-  const [showShortcuts, setShowShortcuts] = React.useState(false);
+  const [showKeyGuide, setShowKeyGuide] = useState(false);
+
+  const percent = totalSteps > 0 ? Math.round((currentStepIndex / Math.max(1, totalSteps - 1)) * 100) : 0;
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-arcade-900 border border-arcade-800 rounded-xl shadow-xl">
-      {/* Scrubber / Progress Bar */}
-      <div className="flex items-center gap-3">
-        <span className="text-xs font-mono text-slate-400 min-w-[50px]">
-          STEP {Math.max(0, currentStepIndex)} / {Math.max(0, totalSteps - 1)}
-        </span>
-        <div className="relative flex-1 flex items-center">
-          <input
-            type="range"
-            min={0}
-            max={Math.max(0, totalSteps - 1)}
-            value={currentStepIndex}
-            onChange={(e) => {
-              sound.playClick();
-              onStepSeek(Number(e.target.value));
-            }}
-            className="w-full h-1.5 bg-arcade-800 rounded-lg appearance-none cursor-pointer accent-lime-accent"
+    <div className="rpg-box-dark p-4 border-4 border-gb-ink shadow-pixel text-gb-cream select-none">
+      {/* Simulation Progress (Styled as Pokémon HP/XP Progress Gauge) */}
+      <div className="mb-3">
+        <div className="flex justify-between items-center text-xs font-vt323 text-gb-pale mb-1">
+          <span className="font-pixel text-[9px] text-gb-cream">
+            TURN: {Math.max(0, currentStepIndex)} / {Math.max(0, totalSteps - 1)}
+          </span>
+          <span className="font-pixel text-[9px] text-hare">
+            PROGRESS: {percent}%
+          </span>
+        </div>
+
+        {/* Stepped HP/XP Style Gauge */}
+        <div className="relative w-full h-4 bg-gb-forest border-2 border-gb-ink overflow-hidden p-0.5">
+          <div
+            className="h-full bg-gb-pale border-r-2 border-gb-ink transition-all duration-150"
+            style={{ width: `${percent}%` }}
           />
         </div>
-        <span className="text-xs font-mono font-medium text-lime-accent">
-          {totalSteps > 0 ? Math.round(((currentStepIndex) / Math.max(1, totalSteps - 1)) * 100) : 0}%
-        </span>
+
+        {/* Range Scrubber */}
+        <input
+          type="range"
+          min={0}
+          max={Math.max(0, totalSteps - 1)}
+          value={currentStepIndex}
+          onChange={(e) => {
+            sound.playClick();
+            onStepSeek(Number(e.target.value));
+          }}
+          className="w-full mt-1 accent-hare cursor-pointer"
+        />
       </div>
 
-      {/* Control Buttons Row */}
+      {/* Control Buttons Row (Classic Handheld Pad Layout) */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-        {/* Playback Controls */}
+        {/* Playback Buttons */}
         <div className="flex items-center gap-2">
-          {/* Reset */}
+          {/* Reset (SELECT) */}
           <button
             onClick={() => {
               sound.playReset();
               onReset();
             }}
             title="Reset Simulation (R)"
-            className="p-2.5 rounded-lg bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300 hover:text-white transition-all duration-150 active:scale-95"
+            className="pixel-btn pixel-btn-secondary"
           >
-            <RotateCcw className="w-4 h-4" />
+            <span>RESET</span>
           </button>
 
-          {/* Step Backward */}
+          {/* Step Back (B BUTTON) */}
           <button
             onClick={() => {
               sound.playClick();
               onStepBackward();
             }}
             disabled={!canStepBackward}
-            title="Step Backward (Left Arrow)"
-            className="p-2.5 rounded-lg bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 active:scale-95"
+            title="Step Back (Left Arrow)"
+            className="pixel-btn pixel-btn-secondary disabled:opacity-40"
           >
-            <SkipBack className="w-4 h-4" />
+            <span>◀ BACK</span>
           </button>
 
-          {/* Play / Pause Primary CTA */}
+          {/* Primary Action [A: START / PAUSE] */}
           <button
             onClick={() => {
               sound.playClick();
               onPlayPause();
             }}
-            title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 active:scale-95 shadow-lg ${
-              isPlaying
-                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-glow-hare'
-                : 'bg-lime-accent hover:bg-lime-400 text-slate-950 shadow-glow-lime'
-            }`}
+            title="Play / Pause (Space)"
+            className={`pixel-btn ${isPlaying ? 'pixel-btn-danger' : 'bg-gb-pale hover:bg-gb-leaf text-gb-ink'}`}
           >
-            {isPlaying ? (
-              <>
-                <Pause className="w-4 h-4 fill-current" />
-                <span>PAUSE</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4 fill-current" />
-                <span>START</span>
-              </>
-            )}
+            <span>{isPlaying ? '⏸ PAUSE' : '▶ START'}</span>
           </button>
 
-          {/* Step Forward */}
+          {/* Step Forward (A BUTTON) */}
           <button
             onClick={() => {
               sound.playStep();
@@ -136,15 +124,15 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
             }}
             disabled={!canStepForward}
             title="Step Forward (Right Arrow)"
-            className="p-2.5 rounded-lg bg-arcade-850 hover:bg-arcade-800 border border-arcade-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150 active:scale-95"
+            className="pixel-btn bg-gb-leaf text-white disabled:opacity-40"
           >
-            <SkipForward className="w-4 h-4" />
+            <span>STEP ▶</span>
           </button>
         </div>
 
-        {/* Speed Controls */}
-        <div className="flex items-center gap-1.5 bg-arcade-950 p-1 rounded-lg border border-arcade-800">
-          <span className="text-[11px] font-mono text-slate-500 px-1.5">SPEED:</span>
+        {/* Speed Gear Controls */}
+        <div className="flex items-center gap-1 bg-gb-forest p-1 border-2 border-gb-ink">
+          <span className="font-pixel text-[8px] text-gb-pale px-1">SPD:</span>
           {SPEED_OPTIONS.map((spd) => (
             <button
               key={`spd-${spd}`}
@@ -152,10 +140,10 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
                 sound.playClick();
                 onSpeedChange(spd);
               }}
-              className={`px-2 py-1 rounded text-xs font-mono font-medium transition-all ${
+              className={`px-1.5 py-1 font-pixel text-[8px] transition-all ${
                 speed === spd
-                  ? 'bg-arcade-800 text-lime-accent border border-lime-accent/30 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-arcade-900'
+                  ? 'bg-gb-cream text-gb-ink font-bold border border-gb-ink'
+                  : 'text-gb-pale hover:text-white'
               }`}
             >
               {spd}x
@@ -163,68 +151,43 @@ export const SimulatorControls: React.FC<SimulatorControlsProps> = ({
           ))}
         </div>
 
-        {/* Secondary: Audio and Shortcuts */}
+        {/* Sound & Help */}
         <div className="flex items-center gap-2">
-          {/* Sound Toggle */}
+          {/* Sound Mute */}
           <button
             onClick={onMuteToggle}
-            title={isMuted ? 'Unmute Sound FX (M)' : 'Mute Sound FX (M)'}
-            className={`p-2.5 rounded-lg border transition-all ${
-              isMuted
-                ? 'bg-arcade-850 border-arcade-800 text-slate-500'
-                : 'bg-arcade-850 border-cyan-500/40 text-cyan-400 shadow-glow-tortoise'
+            className={`p-1.5 font-pixel text-[9px] border-2 border-gb-ink ${
+              isMuted ? 'bg-gb-forest text-gb-pale' : 'bg-gb-pale text-gb-ink'
             }`}
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? '🔇' : '🔊'}
           </button>
 
-          {/* Keyboard Shortcuts Guide */}
-          <div className="relative">
-            <button
-              onClick={() => setShowShortcuts(!showShortcuts)}
-              title="Keyboard Shortcuts"
-              className={`p-2.5 rounded-lg border transition-all ${
-                showShortcuts
-                  ? 'bg-arcade-800 border-lime-accent text-lime-accent'
-                  : 'bg-arcade-850 border-arcade-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              <Keyboard className="w-4 h-4" />
-            </button>
-
-            {showShortcuts && (
-              <div className="absolute bottom-12 right-0 w-64 p-3 bg-arcade-900 border border-arcade-750 rounded-xl shadow-2xl z-30 text-xs">
-                <div className="font-semibold text-slate-200 mb-2 border-b border-arcade-800 pb-1 flex justify-between items-center">
-                  <span>KEYBOARD COMMANDS</span>
-                  <span className="text-[10px] text-lime-accent font-mono">ARCADE</span>
-                </div>
-                <div className="space-y-1.5 text-slate-300 font-mono text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Play / Pause:</span>
-                    <kbd className="px-1.5 py-0.5 bg-arcade-800 rounded border border-arcade-700">Space</kbd>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Step Forward:</span>
-                    <kbd className="px-1.5 py-0.5 bg-arcade-800 rounded border border-arcade-700">&rarr;</kbd>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Step Backward:</span>
-                    <kbd className="px-1.5 py-0.5 bg-arcade-800 rounded border border-arcade-700">&larr;</kbd>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Reset:</span>
-                    <kbd className="px-1.5 py-0.5 bg-arcade-800 rounded border border-arcade-700">R</kbd>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Toggle Audio:</span>
-                    <kbd className="px-1.5 py-0.5 bg-arcade-800 rounded border border-arcade-700">M</kbd>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Keyboard Guide Toggle */}
+          <button
+            onClick={() => setShowKeyGuide(!showKeyGuide)}
+            className="px-2 py-1 font-pixel text-[8px] bg-gb-olive border-2 border-gb-ink text-gb-cream hover:bg-gb-leaf"
+          >
+            KEYS?
+          </button>
         </div>
       </div>
+
+      {/* Retro Keyboard Guide Popup */}
+      {showKeyGuide && (
+        <div className="rpg-box p-3 mt-3 border-2 border-gb-ink text-gb-ink font-vt323 text-lg leading-tight">
+          <div className="font-pixel text-[9px] text-hare mb-1 border-b border-gb-ink pb-0.5">
+            HANDHELD CONTROLLER SHORTCUTS:
+          </div>
+          <div className="grid grid-cols-2 gap-x-4">
+            <div>[SPACE / A] : PLAY / PAUSE</div>
+            <div>[RIGHT / B] : STEP FORWARD</div>
+            <div>[LEFT] : STEP BACKWARD</div>
+            <div>[R / SELECT] : RESET LAB</div>
+            <div>[M] : TOGGLE 8-BIT SOUND</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

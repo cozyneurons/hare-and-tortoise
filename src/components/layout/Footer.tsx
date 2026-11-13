@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavTab } from './Navbar';
-import { Keyboard } from 'lucide-react';
+import { PixelHareSprite, PixelTortoiseSprite } from '../pixel/PixelSprites';
 
 interface FooterProps {
   onTabChange: (tab: NavTab) => void;
@@ -8,96 +8,96 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onTabChange }) => {
   return (
-    <footer className="w-full bg-arcade-950 border-t border-arcade-800/80 mt-16 font-mono text-xs text-slate-400">
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* Brand Info */}
+    <footer className="w-full bg-gb-forest border-t-4 border-gb-ink mt-16 font-pixel text-[10px] text-gb-cream select-none">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          {/* Cartridge Info */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="font-extrabold tracking-wider text-white text-base">
-                CHASE<span className="text-lime-accent">//</span>LOOP
+              <span className="text-sm font-pixel text-gb-cream">
+                CHASE<span className="text-hare">::</span>LOOP
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-arcade-900 border border-arcade-800 text-slate-400">
-                v2.0 PRODUCTION
+              <span className="px-1.5 py-0.5 bg-gb-leaf border border-gb-ink text-[8px] text-white">
+                GBC CARTRIDGE v2.0
               </span>
             </div>
-            <p className="text-slate-400 text-xs leading-relaxed max-w-sm font-sans">
-              An interactive computer science laboratory visualizing Floyd's slow and fast pointer algorithms, cycle detection, mathematical derivations, and functional graphs.
+            <p className="font-vt323 text-lg text-gb-pale leading-normal max-w-sm">
+              An interactive 8-bit computer science laboratory visualizing Floyd's cycle detection, two-pointer relative velocity, and functional graphs.
             </p>
-            <div className="flex items-center gap-2 text-slate-500 text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-lime-accent" />
-              <span>Two pointers. Different speeds. One inevitable meeting.</span>
+            <div className="flex items-center gap-2 text-gb-pale text-[9px]">
+              <PixelTortoiseSprite size={16} />
+              <PixelHareSprite size={16} />
+              <span>SAVED TO BATTERY BACKUP RAM</span>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Overworld Map Links */}
           <div className="space-y-2">
-            <div className="font-bold text-white text-xs uppercase tracking-wider mb-2">
-              SECTIONS
+            <div className="font-bold text-gb-pale uppercase border-b-2 border-gb-ink pb-1">
+              MAP DESTINATIONS
             </div>
-            <ul className="space-y-1.5 text-xs text-slate-400">
+            <ul className="space-y-1.5 text-[9px] text-gb-cream">
               <li>
                 <button
                   onClick={() => onTabChange('arena')}
-                  className="hover:text-lime-accent transition-colors"
+                  className="hover:text-gb-pale transition-colors flex items-center gap-1"
                 >
-                  &rarr; Algorithm Arena
+                  <span className="text-hare">▶</span> PROF'S LABORATORY
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onTabChange('learn')}
-                  className="hover:text-cyan-400 transition-colors"
+                  className="hover:text-gb-pale transition-colors flex items-center gap-1"
                 >
-                  &rarr; Mathematical Proofs
+                  <span className="text-hare">▶</span> ALGORITHM POKÉDEX
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onTabChange('challenges')}
-                  className="hover:text-amber-400 transition-colors"
+                  className="hover:text-gb-pale transition-colors flex items-center gap-1"
                 >
-                  &rarr; Arcade Challenges
+                  <span className="text-hare">▶</span> TRAINER BATTLE ARENA
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => onTabChange('complexity')}
-                  className="hover:text-lime-accent transition-colors"
+                  className="hover:text-gb-pale transition-colors flex items-center gap-1"
                 >
-                  &rarr; Complexity &amp; Memory Lab
+                  <span className="text-hare">▶</span> TRAINER CARD &amp; STATS
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Hotkeys & Specs */}
+          {/* Game Boy Button Keypad Guide */}
           <div className="space-y-2">
-            <div className="font-bold text-white text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Keyboard className="w-3.5 h-3.5 text-cyan-400" />
-              <span>KEYBOARD CONTROL</span>
+            <div className="font-bold text-gb-pale uppercase border-b-2 border-gb-ink pb-1">
+              GAME BOY CONTROLS
             </div>
-            <div className="text-[11px] space-y-1 text-slate-400">
-              <div><kbd className="px-1.5 py-0.5 bg-arcade-900 rounded border border-arcade-800 text-slate-300">Space</kbd> : Play / Pause</div>
-              <div><kbd className="px-1.5 py-0.5 bg-arcade-900 rounded border border-arcade-800 text-slate-300">&rarr;</kbd> : Step Forward</div>
-              <div><kbd className="px-1.5 py-0.5 bg-arcade-900 rounded border border-arcade-800 text-slate-300">&larr;</kbd> : Step Backward</div>
-              <div><kbd className="px-1.5 py-0.5 bg-arcade-900 rounded border border-arcade-800 text-slate-300">R</kbd> : Reset Simulation</div>
-              <div><kbd className="px-1.5 py-0.5 bg-arcade-900 rounded border border-arcade-800 text-slate-300">M</kbd> : Toggle Sound FX</div>
+            <div className="font-vt323 text-lg text-gb-cream space-y-1">
+              <div><strong className="text-retro-warning">[SPACE / A]</strong> : Play / Pause</div>
+              <div><strong className="text-gb-pale">[&rarr; / B]</strong> : Step Forward</div>
+              <div><strong className="text-gb-pale">[&larr; / OPT]</strong> : Step Backward</div>
+              <div><strong className="text-retro-error">[R / SELECT]</strong> : Reset Simulation</div>
+              <div><strong className="text-tortoise">[M / START]</strong> : 8-Bit Audio Mute</div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-arcade-900 pt-6 flex flex-wrap items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div className="border-t-2 border-gb-ink pt-4 flex flex-wrap items-center justify-between gap-2 text-[8px] text-gb-pale font-pixel">
           <div>
-            &copy; 2026 CHASE//LOOP. High-Performance Algorithm Visualizer.
+            &copy; 1967-2026 CHASE::LOOP &bull; FLOYD HANDHELD LAB
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-lime-accent">Time: O(N)</span>
+            <span>TIME: O(N)</span>
             <span>&bull;</span>
-            <span className="text-cyan-400">Space: O(1) Auxiliary</span>
+            <span>SPACE: O(1) CONSTANT</span>
             <span>&bull;</span>
-            <span className="text-amber-400">100% Deterministic Engine</span>
+            <span className="text-retro-success">BATTERY: OK</span>
           </div>
         </div>
       </div>
