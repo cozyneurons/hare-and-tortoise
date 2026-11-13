@@ -1,9 +1,16 @@
 import React from 'react';
 
 // Pixel Tortoise (Teal / Forest Green with shell & headband)
-export const PixelTortoiseSprite: React.FC<{ size?: number; className?: string }> = ({ size = 32, className = '' }) => {
+export const PixelTortoiseSprite: React.FC<{ size?: number; className?: string; x?: number; y?: number }> = ({ 
+  size = 32, 
+  className = '',
+  x,
+  y
+}) => {
   return (
     <svg
+      x={x}
+      y={y}
       width={size}
       height={size}
       viewBox="0 0 16 16"
@@ -39,9 +46,16 @@ export const PixelTortoiseSprite: React.FC<{ size?: number; className?: string }
 };
 
 // Pixel Hare (Warm Amber / Orange with long ears & lightning speed scarf)
-export const PixelHareSprite: React.FC<{ size?: number; className?: string }> = ({ size = 32, className = '' }) => {
+export const PixelHareSprite: React.FC<{ size?: number; className?: string; x?: number; y?: number }> = ({ 
+  size = 32, 
+  className = '',
+  x,
+  y
+}) => {
   return (
     <svg
+      x={x}
+      y={y}
       width={size}
       height={size}
       viewBox="0 0 16 16"
@@ -77,9 +91,15 @@ export const PixelHareSprite: React.FC<{ size?: number; className?: string }> = 
 };
 
 // Pixel Collision Flash
-export const PixelCollisionBurst: React.FC<{ size?: number }> = ({ size = 48 }) => {
+export const PixelCollisionBurst: React.FC<{ size?: number; x?: number; y?: number }> = ({ 
+  size = 48,
+  x,
+  y
+}) => {
   return (
     <svg
+      x={x}
+      y={y}
       width={size}
       height={size}
       viewBox="0 0 24 24"

@@ -43,7 +43,10 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
   const slowNode = currentStep && currentStep.slowIndex !== null ? nodeMap.get(currentStep.slowIndex) : null;
   const fastNode = currentStep && currentStep.fastIndex !== null ? nodeMap.get(currentStep.fastIndex) : null;
-  const isCollision = currentStep && currentStep.slowIndex !== null && currentStep.slowIndex === currentStep.fastIndex;
+  
+  // Deterministic collision check: only true when simulator explicitly reached COLLISION status
+  const isCollision = currentStep?.status === 'COLLISION';
+  const areBothOnSameNode = currentStep && currentStep.slowIndex !== null && currentStep.slowIndex === currentStep.fastIndex && !isCollision;
 
   // Render edge paths
   const renderEdges = () => {
@@ -66,7 +69,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         pathD = `M ${node.x} ${node.y} Q ${midX} ${curveY} ${target.x} ${target.y}`;
       } else if (isBackEdge) {
         const midX = (node.x + target.x) / 2;
-        const midY = Math.max(node.y, target.y) + 70;
+        const midY = Math.max(node.y, target.y) + 75;
         pathD = `M ${node.x} ${node.y} Q ${midX} ${midY} ${target.x} ${target.y}`;
       } else {
         pathD = `M ${node.x} ${node.y} L ${target.x} ${target.y}`;
@@ -74,22 +77,37 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
       return (
         <g key={`edge-${node.id}-${target.id}`}>
-          {/* Active outline trail */}
+          {/* Active outline trail glow */}
           {isHighlighted && (
             <path
               d={pathD}
               fill="none"
               stroke={isSlowEdge ? '#2A9D8F' : '#E76F51'}
-              strokeWidth="8"
-              strokeOpacity="0.4"
+              strokeWidth="10"
+              strokeOpacity="0.45"
             />
           )}
-          {/* Base Pixel Cable / Conduit */}
+
+          {/* Base Outer Dark Conduit Cable */}
           <path
             d={pathD}
             fill="none"
-            stroke={isHighlighted ? (isSlowEdge ? '#2A9D8F' : '#E76F51') : '#0D1F18'}
-            strokeWidth={isHighlighted ? '4' : '3'}
+            stroke="#0D1F18"
+            strokeWidth={isHighlighted ? '7' : '5'}
+            strokeDasharray={isBackEdge ? '6,4' : undefined}
+            shapeRendering="crispEdges"
+          />
+
+          {/* Inner Core Transmission Line */}
+          <path
+            d={pathD}
+            fill="none"
+            stroke={
+              isHighlighted
+                ? (isSlowEdge ? '#2A9D8F' : '#E76F51')
+                : '#FAF7EE'
+            }
+            strokeWidth={isHighlighted ? '4' : '2.5'}
             strokeDasharray={isBackEdge ? '6,4' : undefined}
             markerEnd={isHighlighted ? 'url(#arrow-retro-active)' : 'url(#arrow-retro)'}
             shapeRendering="crispEdges"
@@ -101,24 +119,26 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
   return (
     <div className="relative w-full h-full min-h-[380px] flex flex-col justify-center items-center bg-gb-forest border-4 border-gb-ink shadow-pixel rounded-none overflow-hidden select-none">
-      {/* Laboratory Flooring Background */}
-      <div className="absolute inset-0 lab-floor opacity-65 pointer-events-none" />
-
       {/* Lab Monitor Frame Header */}
-      <div className="absolute top-0 left-0 right-0 h-7 bg-gb-olive border-b-2 border-gb-ink px-3 flex items-center justify-between text-[9px] font-pixel text-gb-cream z-10">
+      <div className="absolute top-0 left-0 right-0 h-7 bg-gb-olive border-b-3 border-gb-ink px-3 flex items-center justify-between text-[9px] font-pixel text-gb-cream z-10 shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-retro-success border border-gb-ink animate-pulse" />
-          <span>RESEARCH MONITOR // V-64</span>
+          <span className="w-2.5 h-2.5 bg-retro-success border border-gb-ink animate-pulse" />
+          <span className="font-bold tracking-wide">RESEARCH MONITOR // V-64</span>
         </div>
-        <div className="text-gb-pale">
-          MODE: {mode.toUpperCase().replace('-', ' ')}
+        <div className="flex items-center gap-2">
+          <span className="text-gb-pale">
+            MODE: {mode.toUpperCase().replace('-', ' ')}
+          </span>
+          <span className="px-1.5 py-0.2 bg-gb-forest border border-gb-ink text-[8px] text-hare">
+            LIVE LCD
+          </span>
         </div>
       </div>
 
       {/* Array tape for Find Duplicate Mode (Styled as Poké-Ball Item Belt) */}
       {mode === 'find-duplicate' && numsArray.length > 0 && (
         <div className="absolute top-9 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-1 p-2 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
-          <div className="font-pixel text-[9px] text-gb-ink">
+          <div className="font-pixel text-[9px] text-gb-ink font-bold">
             POKÉ-BELT (ARRAY): <span className="text-hare">SLOT[i] &rarr; VAL</span>
           </div>
           <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
@@ -151,53 +171,72 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         </div>
       )}
 
-      {/* Main SVG Visualization */}
+      {/* Main SVG Visualization Screen */}
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-full max-h-[500px] select-none mt-4"
+        className="w-full h-full max-h-[500px] select-none mt-7 bg-gb-cream"
         shapeRendering="crispEdges"
       >
         <defs>
+          {/* Tactical Game Boy Dot Matrix Screen Pattern */}
+          <pattern id="monitor-grid-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+            <rect x="0" y="0" width="20" height="20" fill="#FAF7EE" />
+            <circle cx="2" cy="2" r="1.5" fill="#D8CCA8" opacity="0.65" />
+          </pattern>
+
+          {/* Standard High-Contrast Conduit Arrow */}
           <marker
             id="arrow-retro"
-            viewBox="0 0 10 10"
-            refX="22"
-            refY="5"
-            markerWidth="6"
-            markerHeight="6"
+            viewBox="0 0 12 12"
+            refX="30"
+            refY="6"
+            markerWidth="8"
+            markerHeight="8"
             orient="auto-start-reverse"
           >
-            <path d="M 0 1 L 8 5 L 0 9 z" fill="#0D1F18" />
+            <path d="M 1 2 L 10 6 L 1 10 z" fill="#0D1F18" stroke="#0D1F18" strokeWidth="1" />
+            <path d="M 2 4 L 7 6 L 2 8 z" fill="#FAF7EE" />
           </marker>
+
+          {/* Active Highlight Conduit Arrow */}
           <marker
             id="arrow-retro-active"
-            viewBox="0 0 10 10"
-            refX="22"
-            refY="5"
-            markerWidth="7"
-            markerHeight="7"
+            viewBox="0 0 12 12"
+            refX="30"
+            refY="6"
+            markerWidth="9"
+            markerHeight="9"
             orient="auto-start-reverse"
           >
-            <path d="M 0 1 L 8 5 L 0 9 z" fill="#E9C46A" />
+            <path d="M 1 2 L 10 6 L 1 10 z" fill="#0D1F18" stroke="#0D1F18" strokeWidth="1.5" />
+            <path d="M 2 4 L 7 6 L 2 8 z" fill="#E9C46A" />
           </marker>
         </defs>
 
-        {/* Directed Paths */}
+        {/* Crisp LCD Screen Ground */}
+        <rect width={width} height={height} fill="url(#monitor-grid-dots)" />
+
+        {/* Directed Conduit Paths */}
         {renderEdges()}
 
         {/* Null Terminator for non-cyclic lists (Rendered as dead-end road sign) */}
         {mode !== 'find-duplicate' && (cyclePos === null || cyclePos < 0) && layoutNodes.length > 0 && (
-          <g transform={`translate(${layoutNodes[layoutNodes.length - 1].x + 65}, ${layoutNodes[layoutNodes.length - 1].y})`}>
-            <line x1="-35" y1="0" x2="-8" y2="0" stroke="#0D1F18" strokeWidth="3" strokeDasharray="4,4" />
-            <rect x="-6" y="-12" width="44" height="24" fill="#0D1F18" stroke="#0D1F18" strokeWidth="2" />
-            <rect x="-4" y="-10" width="40" height="20" fill="#F2E8CF" />
-            <text x="16" y="4" textAnchor="middle" fill="#0D1F18" fontSize="9" fontFamily="'Press Start 2P', monospace">
+          <g transform={`translate(${layoutNodes[layoutNodes.length - 1].x + 75}, ${layoutNodes[layoutNodes.length - 1].y})`}>
+            {/* Conduit to NULL */}
+            <line x1="-45" y1="0" x2="-8" y2="0" stroke="#0D1F18" strokeWidth="5" strokeDasharray="4,4" />
+            <line x1="-45" y1="0" x2="-8" y2="0" stroke="#FAF7EE" strokeWidth="2" strokeDasharray="4,4" />
+            {/* 3D Drop Shadow */}
+            <rect x="-4" y="-14" width="56" height="28" fill="#0D1F18" />
+            {/* Outer Sign Frame */}
+            <rect x="-6" y="-16" width="56" height="28" fill="#F2E8CF" stroke="#0D1F18" strokeWidth="3" />
+            <rect x="-4" y="-14" width="52" height="24" fill="#FFFFFF" />
+            <text x="22" y="1" textAnchor="middle" fill="#E63946" fontSize="9" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               NULL
             </text>
           </g>
         )}
 
-        {/* Nodes (Rendered as Stepping Stone Poké-Platforms) */}
+        {/* Nodes (Rendered as 100% Solid Foreground 3D Stepping Stone Poké-Platforms) */}
         {layoutNodes.map(node => {
           const isSlowOnNode = currentStep?.slowIndex === node.id;
           const isFastOnNode = currentStep?.fastIndex === node.id;
@@ -205,23 +244,46 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           const isMiddle = mode === 'find-middle' && currentStep?.status === 'FOUND_MIDDLE' && currentStep?.middleIndex === node.id;
           const isDup = mode === 'find-duplicate' && currentStep?.status === 'FOUND_DUPLICATE' && currentStep?.duplicateValue === node.id;
 
-          let fillColor = '#F2E8CF';
+          // Solid Opaque Styling
+          let fillColor = '#FFFFFF';
           let borderColor = '#0D1F18';
+          let headerBg = '#386641';
+          let borderWidth = 3;
 
           if (isSlowOnNode && isFastOnNode) {
             borderColor = '#E63946';
+            headerBg = '#E63946';
+            borderWidth = 4;
           } else if (isSlowOnNode) {
             borderColor = '#2A9D8F';
+            headerBg = '#2A9D8F';
+            borderWidth = 4;
           } else if (isFastOnNode) {
             borderColor = '#E76F51';
+            headerBg = '#E76F51';
+            borderWidth = 4;
           }
 
-          if (isDup || isMiddle) {
-            fillColor = '#A7C957';
+          if (isDup) {
+            fillColor = '#FFF2B2';
+            if (!isSlowOnNode && !isFastOnNode) {
+              borderColor = '#E76F51';
+              headerBg = '#E76F51';
+            }
+          } else if (isMiddle) {
+            fillColor = '#E3F8C4';
+            if (!isSlowOnNode && !isFastOnNode) {
+              borderColor = '#38B000';
+              headerBg = '#38B000';
+            }
           } else if (isCycleEntry) {
-            fillColor = '#F4A261';
+            fillColor = '#FDE6B0';
+            if (!isSlowOnNode && !isFastOnNode) {
+              borderColor = '#E63946';
+              headerBg = '#E63946';
+            }
           } else if (node.isInCycle) {
-            fillColor = '#FAF5E6';
+            fillColor = '#FAF7EE';
           }
 
           return (
@@ -230,70 +292,85 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               transform={`translate(${node.x}, ${node.y})`}
               className="cursor-pointer"
             >
-              {/* Outer platform shadow */}
-              <rect x="-20" y="-20" width="44" height="44" fill="#0D1F18" />
+              {/* Layer 1: Solid 3D Pixel Drop Shadow (Offset +4px in X and Y) */}
+              <rect x="-22" y="-22" width="52" height="52" fill="#0D1F18" />
 
-              {/* Main square tile platform */}
+              {/* Layer 2: Main Solid Platform Face */}
               <rect
-                x="-22"
-                y="-22"
-                width="40"
-                height="40"
+                x="-26"
+                y="-26"
+                width="52"
+                height="52"
                 fill={fillColor}
                 stroke={borderColor}
-                strokeWidth={isSlowOnNode || isFastOnNode ? 4 : 3}
+                strokeWidth={borderWidth}
               />
 
-              {/* Inner bevel corner pixels */}
-              <rect x="-19" y="-19" width="3" height="3" fill="#FFFFFF" />
-              <rect x="13" y="13" width="3" height="3" fill="#D8CCA8" />
+              {/* Layer 3: 3D Pixel Bevel Highlights */}
+              <rect x="-24" y="-24" width="48" height="2" fill="#FFFFFF" opacity="0.9" />
+              <rect x="-24" y="-24" width="2" height="48" fill="#FFFFFF" opacity="0.9" />
+              <rect x="-24" y="22" width="48" height="2" fill="#D0C4A0" />
+              <rect x="22" y="-24" width="2" height="48" fill="#D0C4A0" />
 
-              {/* Node ID label top-left */}
+              {/* Layer 4: Node ID Header Banner */}
+              <rect
+                x="-24"
+                y="-24"
+                width="48"
+                height="13"
+                fill={headerBg}
+              />
               <text
-                x="-14"
-                y="-10"
-                fill="#386641"
-                fontSize="7"
+                x="0"
+                y="-15"
+                textAnchor="middle"
+                fill="#FFFFFF"
+                fontSize="7.5"
+                fontWeight="bold"
                 fontFamily="'Press Start 2P', monospace"
               >
                 #{node.id}
               </text>
 
-              {/* Node Value in Center */}
+              {/* Layer 5: Bold Centered Node Value */}
               <text
+                x="0"
+                y="14"
                 textAnchor="middle"
-                dy="8"
                 fill="#0D1F18"
-                fontSize="12"
+                fontSize="15"
                 fontWeight="bold"
                 fontFamily="'Press Start 2P', monospace"
               >
                 {node.value}
               </text>
 
-              {/* Entry / Middle / Duplicate Badges */}
+              {/* Badges: Cycle Entry / Middle / Duplicate */}
               {isCycleEntry && (
-                <g transform="translate(0, -32)">
-                  <rect x="-28" y="-7" width="56" height="14" fill="#E63946" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="4" fill="#FFFFFF" fontSize="7" fontFamily="'Press Start 2P', monospace">
+                <g transform="translate(0, -36)">
+                  <rect x="-33" y="-8" width="66" height="16" fill="#0D1F18" />
+                  <rect x="-35" y="-10" width="66" height="16" fill="#E63946" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     ENTRY &mu;
                   </text>
                 </g>
               )}
 
               {isMiddle && (
-                <g transform="translate(0, -32)">
-                  <rect x="-30" y="-7" width="60" height="14" fill="#38B000" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="4" fill="#FFFFFF" fontSize="7" fontFamily="'Press Start 2P', monospace">
+                <g transform="translate(0, -36)">
+                  <rect x="-35" y="-8" width="70" height="16" fill="#0D1F18" />
+                  <rect x="-37" y="-10" width="70" height="16" fill="#38B000" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     MIDDLE!
                   </text>
                 </g>
               )}
 
               {isDup && (
-                <g transform="translate(0, -32)">
-                  <rect x="-34" y="-7" width="68" height="14" fill="#E9C46A" stroke="#0D1F18" strokeWidth="2" />
-                  <text textAnchor="middle" dy="4" fill="#0D1F18" fontSize="7" fontFamily="'Press Start 2P', monospace">
+                <g transform="translate(0, -36)">
+                  <rect x="-38" y="-8" width="76" height="16" fill="#0D1F18" />
+                  <rect x="-40" y="-10" width="76" height="16" fill="#E9C46A" stroke="#0D1F18" strokeWidth="2" />
+                  <text textAnchor="middle" dy="2" fill="#0D1F18" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                     DUPE VAL!
                   </text>
                 </g>
@@ -302,30 +379,37 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           );
         })}
 
-        {/* Collision Animation (Pixel Starburst) */}
+        {/* Collision Animation (Pixel Starburst) - Only shown when status is strictly COLLISION */}
         {isCollision && slowNode && (
           <g transform={`translate(${slowNode.x}, ${slowNode.y})`}>
-            <foreignObject x="-24" y="-24" width="48" height="48">
-              <PixelCollisionBurst size={48} />
-            </foreignObject>
-            <rect x="-65" y="-38" width="130" height="22" fill="#FAF5E6" stroke="#0D1F18" strokeWidth="3" />
-            <text x="0" y="-23" textAnchor="middle" fill="#E63946" fontSize="8" fontFamily="'Press Start 2P', monospace">
-              ★ COLLISION! ★
-            </text>
+            {/* Native SVG Starburst Flash */}
+            <PixelCollisionBurst size={56} x={-28} y={-28} />
+            
+            {/* Collision Dialogue Box */}
+            <g transform="translate(0, -56)">
+              <rect x="-70" y="-12" width="140" height="26" fill="#0D1F18" />
+              <rect x="-72" y="-14" width="140" height="26" fill="#FAF5E6" stroke="#E63946" strokeWidth="3" />
+              <text x="0" y="3" textAnchor="middle" fill="#E63946" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                ★ POINTERS MET! ★
+              </text>
+            </g>
           </g>
         )}
 
         {/* Tortoise Pixel Character Sprite Marker (Slow 1x) */}
         {slowNode && (
           <g
-            transform={`translate(${slowNode.x}, ${slowNode.y + (isCollision ? -48 : -44)})`}
+            transform={`translate(${
+              areBothOnSameNode ? slowNode.x - 22 : slowNode.x
+            }, ${slowNode.y - 48})`}
             className="transition-all duration-300"
           >
-            <foreignObject x="-14" y="-26" width="28" height="28">
-              <PixelTortoiseSprite size={28} />
-            </foreignObject>
-            <rect x="-34" y="-8" width="68" height="16" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
-            <text x="0" y="3" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontFamily="'Press Start 2P', monospace">
+            {/* Native SVG Tortoise Sprite */}
+            <PixelTortoiseSprite size={30} x={-15} y={-30} />
+            {/* Tortoise Label Tag */}
+            <rect x="-30" y="2" width="60" height="16" fill="#0D1F18" />
+            <rect x="-32" y="0" width="60" height="16" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y="11" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               SLOW 1x
             </text>
           </g>
@@ -334,14 +418,17 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         {/* Hare Pixel Character Sprite Marker (Fast 2x) */}
         {fastNode && !isCollision && (
           <g
-            transform={`translate(${fastNode.x}, ${fastNode.y + 38})`}
+            transform={`translate(${
+              areBothOnSameNode ? fastNode.x + 22 : fastNode.x
+            }, ${areBothOnSameNode ? fastNode.y - 48 : fastNode.y + 36})`}
             className="transition-all duration-300"
           >
-            <foreignObject x="-14" y="10" width="28" height="28">
-              <PixelHareSprite size={28} />
-            </foreignObject>
-            <rect x="-34" y="-6" width="68" height="16" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
-            <text x="0" y="5" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontFamily="'Press Start 2P', monospace">
+            {/* Native SVG Hare Sprite */}
+            <PixelHareSprite size={30} x={-15} y={areBothOnSameNode ? -30 : 18} />
+            {/* Hare Label Tag */}
+            <rect x="-30" y={areBothOnSameNode ? 2 : 0} width="60" height="16" fill="#0D1F18" />
+            <rect x="-32" y={areBothOnSameNode ? 0 : -2} width="60" height="16" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y={areBothOnSameNode ? 11 : 9} textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               FAST 2x
             </text>
           </g>
