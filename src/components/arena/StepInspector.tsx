@@ -86,13 +86,13 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ currentStep, total
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-gb-ink">
               {mathNotes.mu !== undefined && (
-                <span>&bull; Prefix &mu;: <strong>{mathNotes.mu}</strong></span>
+                <span>• Prefix μ: <strong>{mathNotes.mu}</strong></span>
               )}
               {mathNotes.lambda !== undefined && (
-                <span>&bull; Cycle &lambda;: <strong>{mathNotes.lambda}</strong></span>
+                <span>• Cycle λ: <strong>{mathNotes.lambda}</strong></span>
               )}
               {mathNotes.k !== undefined && (
-                <span>&bull; Offset k: <strong>{mathNotes.k}</strong></span>
+                <span>• Offset k: <strong>{mathNotes.k}</strong></span>
               )}
               {mathNotes.equation && (
                 <span className="w-full font-bold text-retro-error">

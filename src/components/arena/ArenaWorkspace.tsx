@@ -279,7 +279,7 @@ export const ArenaWorkspace: React.FC = () => {
               </div>
               {simulationResult.stats.cycleLength !== undefined && (
                 <div className="flex justify-between items-center border-t border-gb-ink pt-1 text-hare">
-                  <span>CYCLE LENGTH (&lambda;):</span>
+                  <span>CYCLE LENGTH (λ):</span>
                   <span className="font-bold">
                     {simulationResult.stats.cycleLength} TILES
                   </span>
@@ -287,7 +287,7 @@ export const ArenaWorkspace: React.FC = () => {
               )}
               {simulationResult.stats.nonCycleLength !== undefined && (
                 <div className="flex justify-between items-center text-gb-cream">
-                  <span>PREFIX DIST (&mu;):</span>
+                  <span>PREFIX DIST (μ):</span>
                   <span className="font-bold">
                     {simulationResult.stats.nonCycleLength} TILES
                   </span>

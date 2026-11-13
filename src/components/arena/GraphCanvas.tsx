@@ -351,7 +351,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
                   <rect x="-33" y="-8" width="66" height="16" fill="#0D1F18" />
                   <rect x="-35" y="-10" width="66" height="16" fill="#E63946" stroke="#0D1F18" strokeWidth="2" />
                   <text textAnchor="middle" dy="2" fill="#FFFFFF" fontSize="7" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
-                    ENTRY &mu;
+                    ENTRY μ
                   </text>
                 </g>
               )}

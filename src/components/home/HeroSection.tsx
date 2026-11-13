@@ -242,7 +242,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {step.isCollision ? (
                   <span className="text-retro-error animate-blink font-bold">★ COLLISION! ★</span>
                 ) : (
-                  <span>&Delta;v = 1 STEP/TURN</span>
+                  <span>Δv = 1 STEP/TURN</span>
                 )}
               </div>
             </div>
@@ -553,7 +553,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="mt-4 pt-3 border-t-2 border-dashed border-gb-ink text-gb-ink font-vt323 text-lg leading-tight flex items-start gap-2">
               <PixelSignpost size={24} />
               <p>
-                <strong>SIGNBOARD:</strong> "Floyd's Theorem guarantees Tortoise and Hare will meet inside any cycle in at most &lambda; turns."
+                <strong>SIGNBOARD:</strong> "Floyd's Theorem guarantees Tortoise and Hare will meet inside any cycle in at most λ turns."
               </p>
             </div>
           </div>

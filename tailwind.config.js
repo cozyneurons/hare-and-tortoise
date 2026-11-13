@@ -44,10 +44,10 @@ export default {
         }
       },
       fontFamily: {
-        pixel: ['"Press Start 2P"', 'monospace'],
-        vt323: ['"VT323"', 'monospace'],
-        mono: ['"VT323"', '"JetBrains Mono"', 'monospace'],
-        sans: ['"VT323"', 'sans-serif'],
+        pixel: ['"Press Start 2P"', 'ui-monospace', 'Menlo', 'Monaco', 'monospace'],
+        vt323: ['"VT323"', 'ui-monospace', 'Menlo', 'Monaco', 'monospace'],
+        mono: ['"VT323"', '"JetBrains Mono"', 'ui-monospace', 'Menlo', 'monospace'],
+        sans: ['"VT323"', 'ui-monospace', 'Menlo', 'monospace'],
       },
       boxShadow: {
         'pixel-sm': '2px 2px 0px 0px #0D1F18',

@@ -26,25 +26,25 @@ export const LearningSection: React.FC = () => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-2 font-pixel text-[9px]">
-            <div className="p-3 bg-gb-cream border-2 border-gb-ink">
+            <div className="p-3 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
               <div className="text-tortoise font-bold mb-1">TORTOISE (SLOW POINTER)</div>
               <p className="font-vt323 text-lg text-gb-ink leading-snug">
-                Advances <strong>1 node per turn</strong> (<code className="bg-gb-forest/10 px-1">slow = slow.next</code>). 
+                Advances <strong>1 node per turn</strong> (<code className="bg-gb-forest/10 px-1 font-bold">slow = slow.next</code>). 
                 Measures steady traversal pace across the sequence.
               </p>
             </div>
-            <div className="p-3 bg-gb-cream border-2 border-gb-ink">
+            <div className="p-3 bg-gb-cream border-2 border-gb-ink shadow-pixel-sm">
               <div className="text-hare font-bold mb-1">HARE (FAST POINTER)</div>
               <p className="font-vt323 text-lg text-gb-ink leading-snug">
-                Advances <strong>2 nodes per turn</strong> (<code className="bg-gb-forest/10 px-1">fast = fast.next.next</code>). 
+                Advances <strong>2 nodes per turn</strong> (<code className="bg-gb-forest/10 px-1 font-bold">fast = fast.next.next</code>). 
                 Probes into unknown list territory at double speed.
               </p>
             </div>
           </div>
 
-          <div className="p-3 bg-gb-surface border-2 border-gb-ink text-gb-ink">
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink text-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
             <strong className="font-pixel text-[9px] text-gb-forest block mb-1">POKÉDEX DATA ENTRY:</strong>
-            Traditional cycle detection consumes a Hash Set ($O(N)$ extra memory). Floyd's algorithm requires only two CPU register memory addresses, enabling instant cycle detection inside RAM-constrained handhelds and embedded systems!
+            Traditional cycle detection consumes a Hash Set (<span className="font-bold text-hare">O(N)</span> extra memory). Floyd's algorithm requires only two CPU register memory addresses, enabling instant cycle detection inside RAM-constrained handhelds and embedded systems!
           </div>
         </div>
       ),
@@ -56,29 +56,38 @@ export const LearningSection: React.FC = () => {
       subtitle: 'SPECIES: RELATIVE CLOSING SPEED',
       sprite: <PixelHareSprite size={32} />,
       type: 'MATH / KINEMATICS',
-      stats: { height: '&Delta;v = 1', weight: '&le; &lambda; TURNS', habitat: 'CLOSED LOOP' },
+      stats: { height: 'Δv = 1', weight: '≤ λ TURNS', habitat: 'CLOSED LOOP' },
       content: (
         <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
           <p>
             <em>Why must the fast pointer move at exactly 2x speed? Could it move at 3x or 4x?</em>
           </p>
 
-          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
-            <div className="font-pixel text-[9px] text-hare font-bold mb-1">CLOSING SPEED DERIVATION:</div>
-            <div>&bull; Tortoise Velocity: <code>v_slow = 1</code> node/turn.</div>
-            <div>&bull; Hare Velocity: <code>v_fast = 2</code> nodes/turn.</div>
-            <div className="my-1.5 p-2 bg-gb-forest text-gb-cream font-bold">
-              Relative Closing Speed: &Delta;v = 2 - 1 = 1 node per turn!
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
+            <div className="font-pixel text-[9px] text-hare font-bold mb-2">CLOSING SPEED DERIVATION:</div>
+            <div className="space-y-1">
+              <div>• <span className="text-tortoise font-bold">Tortoise Velocity:</span> <code className="bg-gb-cream px-1.5 py-0.5 border border-gb-ink font-bold">v_slow = 1</code> node/turn.</div>
+              <div>• <span className="text-hare font-bold">Hare Velocity:</span> <code className="bg-gb-cream px-1.5 py-0.5 border border-gb-ink font-bold">v_fast = 2</code> nodes/turn.</div>
             </div>
-            <p className="font-vt323 text-lg text-gb-ink mt-1">
-              Because their relative gap decreases by <strong>strictly 1 tile each turn</strong> modulo &lambda;, the distance strictly counts down:
-              $d, d-1, d-2, \dots, 2, 1, 0$ (COLLISION!).
+
+            <div className="my-2.5 p-2.5 bg-gb-forest text-gb-cream font-bold border-2 border-gb-ink font-pixel text-[10px]">
+              Relative Closing Speed: Δv = 2 - 1 = 1 node per turn!
+            </div>
+
+            <p className="mt-2 text-xl">
+              Because their relative gap decreases by <strong>strictly 1 tile each turn</strong> modulo λ, the distance strictly counts down:
+              <br />
+              <span className="inline-block mt-1.5 font-mono font-bold bg-gb-cream px-2 py-0.5 border border-gb-ink text-gb-ink">
+                d, d-1, d-2, ..., 2, 1, 0
+              </span>
+              {' '}
+              <strong className="text-retro-error font-pixel text-[9px] ml-1">(COLLISION!)</strong>.
             </p>
           </div>
 
-          <div className="p-3 bg-retro-error/15 border-2 border-retro-error text-gb-ink">
-            <strong className="font-pixel text-[9px] text-retro-error block mb-0.5">WARNING (THE 3x TRAP):</strong>
-            If Fast ran at 3x speed, &Delta;v = 2. In an even-length cycle, Fast could leap <em>over</em> Slow indefinitely without ever landing on the exact same tile! A speed difference of 1 guarantees collision with zero risk of skipping.
+          <div className="p-3 bg-retro-error/15 border-2 border-retro-error text-gb-ink font-vt323 text-xl leading-snug">
+            <strong className="font-pixel text-[9px] text-retro-error block mb-1">WARNING (THE 3x TRAP):</strong>
+            If Fast ran at 3x speed, Δv = 2. In an even-length cycle, Fast could leap <em>over</em> Slow indefinitely without ever landing on the exact same tile! A speed difference of 1 guarantees collision with zero risk of skipping.
           </div>
         </div>
       ),
@@ -97,15 +106,15 @@ export const LearningSection: React.FC = () => {
             Every singly linked list is either strictly linear (terminating in null) or has a closed cycle.
           </p>
 
-          <div className="space-y-2">
-            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+          <div className="space-y-2.5">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
               <strong className="font-pixel text-[9px] text-gb-forest block mb-1">SCENARIO A: LINEAR (NO CYCLE)</strong>
               <p>
-                Hare encounters <code className="bg-gb-forest/10 px-1">null</code> or <code className="bg-gb-forest/10 px-1">fast.next == null</code> in at most &lceil;N/2&rceil; turns. Algorithm returns <strong>FALSE</strong> in $O(N)$ time.
+                Hare encounters <code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">null</code> or <code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">fast.next == null</code> in at most ⌈N/2⌉ turns. The algorithm returns <strong>FALSE</strong> in <span className="font-bold text-retro-success">O(N)</span> time.
               </p>
             </div>
 
-            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
               <strong className="font-pixel text-[9px] text-hare block mb-1">SCENARIO B: LOOP PRESENT</strong>
               <p>
                 Once Tortoise enters the cycle, Hare is already inside. Since the gap closes by 1 tile per turn, collision is guaranteed before Tortoise completes a single lap!
@@ -119,37 +128,39 @@ export const LearningSection: React.FC = () => {
     {
       num: 'No. 004',
       title: 'CYCLE ENTRY PROOF',
-      subtitle: 'SPECIES: THE &mu; = m&middot;&lambda; - k THEOREM',
+      subtitle: 'SPECIES: THE μ = m · λ - k THEOREM',
       sprite: <PixelBadge type="entry" size={32} />,
       type: 'PROOF / GEOMETRY',
-      stats: { height: '&mu; TILES', weight: 'm&middot;&lambda; - k', habitat: 'CYCLE ENTRY' },
+      stats: { height: 'μ TILES', weight: 'm · λ - k', habitat: 'CYCLE ENTRY' },
       content: (
         <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
-          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
-            <div className="font-pixel text-[9px] text-hare font-bold mb-1.5">MATHEMATICAL PROOF DERIVATION:</div>
-            <div>&bull; Let <strong>&mu;</strong> = distance from Head to Cycle Entry.</div>
-            <div>&bull; Let <strong>&lambda;</strong> = length of Cycle.</div>
-            <div>&bull; Let <strong>k</strong> = distance from Entry to Meeting Point M.</div>
-
-            <div className="p-2.5 bg-gb-forest text-gb-cream my-2 space-y-1 font-vt323 text-xl">
-              <div>Slow distance: <code>d_slow = &mu; + k</code></div>
-              <div>Fast distance: <code>d_fast = &mu; + k + m&lambda;</code> (m &ge; 1)</div>
-              <div>Speed ratio 2:1 &implies; &mu; + k + m&lambda; = 2(&mu; + k) = 2&mu; + 2k</div>
-              <div className="font-bold text-retro-warning pt-1">&mu; = m&middot;&lambda; - k = (m - 1)&lambda; + (&lambda; - k)</div>
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
+            <div className="font-pixel text-[9px] text-hare font-bold mb-2">MATHEMATICAL PROOF DERIVATION:</div>
+            <div className="space-y-1 mb-2">
+              <div>• Let <strong>μ</strong> = distance from Head to Cycle Entry.</div>
+              <div>• Let <strong>λ</strong> = length of Cycle.</div>
+              <div>• Let <strong>k</strong> = distance from Entry to Meeting Point M.</div>
             </div>
 
-            <p className="text-lg">
-              <strong>The Grand Insight:</strong> Distance from Head to Entry is &mu;. Distance from Meeting Point forward to Entry is (&lambda; - k). 
-              Both are identical modulo &lambda;! Moving two pointers at 1x from Head and Meeting point guarantees they collide at the Entry!
+            <div className="p-3 bg-gb-forest text-gb-cream my-2 space-y-1 font-vt323 text-xl border-2 border-gb-ink shadow-pixel-sm">
+              <div>Slow distance: <code>d_slow = μ + k</code></div>
+              <div>Fast distance: <code>d_fast = μ + k + m · λ (m ≥ 1)</code></div>
+              <div>Speed ratio 2:1 ⇒ μ + k + m · λ = 2(μ + k) = 2μ + 2k</div>
+              <div className="font-bold text-retro-warning pt-1 text-2xl">μ = m · λ - k = (m - 1)λ + (λ - k)</div>
+            </div>
+
+            <p className="mt-2 text-xl">
+              <strong>The Grand Insight:</strong> Distance from Head to Entry is <strong>μ</strong>. Distance from Meeting Point forward to Entry is <strong>(λ - k)</strong>. 
+              Both are identical modulo λ! Moving two pointers at 1x from Head and Meeting point guarantees they collide at the Entry!
             </p>
           </div>
 
           {/* Interactive Calculator Slider */}
-          <div className="p-3 bg-gb-cream border-2 border-gb-ink">
-            <div className="font-pixel text-[9px] text-gb-forest mb-2">INTERACTIVE PROOF CALCULATOR:</div>
+          <div className="p-3.5 bg-gb-cream border-2 border-gb-ink font-vt323 text-xl shadow-pixel-sm">
+            <div className="font-pixel text-[9px] text-gb-forest mb-2 font-bold">INTERACTIVE PROOF CALCULATOR:</div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="font-pixel text-[8px] block mb-1">PREFIX (&mu;): {demoMu}</label>
+                <label className="font-pixel text-[8px] block mb-1">PREFIX (μ): {demoMu}</label>
                 <input
                   type="range"
                   min={1}
@@ -160,7 +171,7 @@ export const LearningSection: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="font-pixel text-[8px] block mb-1">CYCLE (&lambda;): {demoLambda}</label>
+                <label className="font-pixel text-[8px] block mb-1">CYCLE (λ): {demoLambda}</label>
                 <input
                   type="range"
                   min={2}
@@ -171,7 +182,7 @@ export const LearningSection: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="mt-2 text-lg text-gb-ink">
+            <div className="mt-2 text-xl text-gb-ink border-t border-gb-ink/20 pt-2">
               Remaining distance from Meeting Point to Entry: <strong>{demoLambda - ((demoLambda - (demoMu % demoLambda)) % demoLambda)}</strong> tiles.
               Both pointers sync at Entry in exactly <strong>{demoMu}</strong> turns!
             </div>
@@ -186,24 +197,24 @@ export const LearningSection: React.FC = () => {
       subtitle: 'SPECIES: SINGLE-PASS SPLITTER',
       sprite: <PixelBadge type="middle" size={32} />,
       type: 'DIVIDE / PARITY',
-      stats: { height: '&lfloor;N/2&rfloor;', weight: '1 PASS', habitat: 'ODD / EVEN LISTS' },
+      stats: { height: '⌊N/2⌋', weight: '1 PASS', habitat: 'ODD / EVEN LISTS' },
       content: (
         <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
           <p>
             Finds the middle node in a single traversal without counting the total length beforehand.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-vt323 text-xl">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink leading-snug shadow-pixel-sm">
               <strong className="font-pixel text-[9px] text-gb-forest block mb-1">ODD LENGTH (5 NODES)</strong>
               <p>
-                Fast stops at tail node 4 (<code className="bg-gb-forest/10 px-1">fast.next == null</code>). Slow rests at exact middle node 2.
+                Fast stops at tail node 4 (<code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">fast.next == null</code>). Slow rests at exact middle node 2.
               </p>
             </div>
-            <div className="p-3 bg-gb-surface border-2 border-gb-ink">
+            <div className="p-3 bg-gb-surface border-2 border-gb-ink leading-snug shadow-pixel-sm">
               <strong className="font-pixel text-[9px] text-tortoise block mb-1">EVEN LENGTH (6 NODES)</strong>
               <p>
-                Fast steps past tail into <code className="bg-gb-forest/10 px-1">null</code>. Slow rests at second middle node 3 (&lfloor;N/2&rfloor;).
+                Fast steps past tail into <code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">null</code>. Slow rests at second middle node 3 (⌊N/2⌋).
               </p>
             </div>
           </div>
@@ -221,22 +232,22 @@ export const LearningSection: React.FC = () => {
       content: (
         <div className="space-y-3 font-vt323 text-xl text-gb-ink leading-tight">
           <p>
-            LeetCode 287: <em>Array of $n+1$ integers in range $[1, n]$. Find the duplicate without modifying array and using O(1) extra space.</em>
+            LeetCode 287: <em>Array of n + 1 integers in range [1, n]. Find the duplicate without modifying the array and using O(1) extra space.</em>
           </p>
 
-          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink">
-            <strong className="font-pixel text-[9px] text-hare block mb-1">THE GRAPH MAPPING:</strong>
+          <div className="p-3.5 bg-gb-surface border-2 border-gb-ink font-vt323 text-xl leading-snug shadow-pixel-sm">
+            <strong className="font-pixel text-[9px] text-hare block mb-1.5">THE GRAPH MAPPING:</strong>
             <p>
-              Treat array indices $i$ as graph vertices. The value $nums[i]$ acts as the directed edge:
+              Treat array indices <code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">i</code> as graph vertices. The value <code className="bg-gb-cream border border-gb-ink px-1.5 py-0.5 font-bold">nums[i]</code> acts as the directed edge:
               <br />
-              <code className="p-1 bg-gb-forest text-gb-cream font-bold block my-1">
+              <code className="p-1.5 bg-gb-forest text-gb-cream font-bold block my-2 border border-gb-ink">
                 i &rarr; nums[i]
               </code>
             </p>
             <p>
-              <strong>Pigeonhole Principle:</strong> $n+1$ values in $[1, n]$ forces at least one number to appear twice. 
-              Multiple indices point to the duplicate number (in-degree &ge; 2). In a functional graph with out-degree 1, an in-degree &ge; 2 is the entrance to a cycle! 
-              Floyd's algorithm locates it in $O(1)$ space.
+              <strong>Pigeonhole Principle:</strong> n + 1 values distributed across [1, n] guarantees at least one duplicate value. 
+              Multiple indices point to the duplicate number (in-degree ≥ 2). In a functional graph where every node has out-degree 1, an in-degree ≥ 2 is the entrance to a closed cycle! 
+              Floyd's algorithm locates it in <span className="font-bold text-retro-success">O(1)</span> auxiliary memory.
             </p>
           </div>
         </div>
@@ -262,29 +273,29 @@ export const LearningSection: React.FC = () => {
                   <th className="p-2">HASH SET</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gb-ink text-gb-ink">
+              <tbody className="divide-y divide-gb-ink text-gb-ink font-vt323 text-xl">
                 <tr>
-                  <td className="p-2 font-bold">CYCLE DETECT</td>
-                  <td className="p-2 text-retro-success">O(N)</td>
-                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 font-bold font-pixel text-[8px]">CYCLE DETECT</td>
+                  <td className="p-2 text-retro-success font-bold">O(N)</td>
+                  <td className="p-2 text-retro-success font-bold">O(1)</td>
                   <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
                 <tr>
-                  <td className="p-2 font-bold">CYCLE ENTRY</td>
-                  <td className="p-2 text-retro-success">O(N)</td>
-                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 font-bold font-pixel text-[8px]">CYCLE ENTRY</td>
+                  <td className="p-2 text-retro-success font-bold">O(N)</td>
+                  <td className="p-2 text-retro-success font-bold">O(1)</td>
                   <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
                 <tr>
-                  <td className="p-2 font-bold">FIND MIDDLE</td>
-                  <td className="p-2 text-retro-success">O(N)</td>
-                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 font-bold font-pixel text-[8px]">FIND MIDDLE</td>
+                  <td className="p-2 text-retro-success font-bold">O(N)</td>
+                  <td className="p-2 text-retro-success font-bold">O(1)</td>
                   <td className="p-2">O(1) (2-PASS)</td>
                 </tr>
                 <tr>
-                  <td className="p-2 font-bold">FIND DUPLICATE</td>
-                  <td className="p-2 text-retro-success">O(N)</td>
-                  <td className="p-2 text-retro-success">O(1)</td>
+                  <td className="p-2 font-bold font-pixel text-[8px]">FIND DUPLICATE</td>
+                  <td className="p-2 text-retro-success font-bold">O(N)</td>
+                  <td className="p-2 text-retro-success font-bold">O(1)</td>
                   <td className="p-2 text-retro-error">O(N) SPACE</td>
                 </tr>
               </tbody>

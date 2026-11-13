@@ -8,6 +8,7 @@
   }
 
   body {
+    font-family: 'VT323', ui-monospace, Menlo, Monaco, 'Courier New', monospace;
     background-color: #183C32;
     background-image: 
       radial-gradient(#386641 15%, transparent 16%),

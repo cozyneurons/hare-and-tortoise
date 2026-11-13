@@ -281,7 +281,7 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                       : 'bg-gb-olive text-gb-cream'
                   }`}
                 >
-                  SECOND MIDDLE &lfloor;N/2&rfloor;
+                  SECOND MIDDLE ⌊N/2⌋
                 </button>
                 <button
                   onClick={() => {
@@ -294,7 +294,7 @@ export const ArenaConfigPanel: React.FC<ArenaConfigPanelProps> = ({
                       : 'bg-gb-olive text-gb-cream'
                   }`}
                 >
-                  FIRST MIDDLE &lfloor;(N-1)/2&rfloor;
+                  FIRST MIDDLE ⌊(N-1)/2⌋
                 </button>
               </div>
             </div>
