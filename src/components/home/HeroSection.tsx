@@ -401,9 +401,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {step.isCollision && (
                   <g transform={`translate(${slowNode.x}, ${slowNode.y})`}>
                     <PixelCollisionBurst size={56} x={-28} y={-28} />
-                    <g transform="translate(0, -48)">
-                      <rect x="-65" y="-12" width="130" height="24" fill="#0D1F18" />
-                      <rect x="-67" y="-14" width="130" height="24" fill="#FAF5E6" stroke="#E63946" strokeWidth="2.5" />
+                    <circle r="26" fill="none" stroke="#E63946" strokeWidth="1.5" strokeDasharray="3,3" opacity="0.85" />
+                    <g transform="translate(0, -60)">
+                      <rect x="-62" y="-12" width="124" height="24" fill="#0D1F18" />
+                      <rect x="-64" y="-14" width="124" height="24" fill="#FAF5E6" stroke="#E63946" strokeWidth="2.5" />
                       <text x="0" y="2" textAnchor="middle" fill="#E63946" fontSize="7.5" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                         ★ COLLISION! ★
                       </text>
@@ -416,17 +417,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <g
                     transform={`translate(${
                       step.isCollision
-                        ? slowNode.x - 22
+                        ? slowNode.x - 32
                         : step.slowNode === step.fastNode
-                        ? slowNode.x - 18
+                        ? slowNode.x - 24
                         : slowNode.x
-                    }, ${slowNode.y - 42})`}
+                    }, ${
+                      step.isCollision
+                        ? slowNode.y - 18
+                        : slowNode.y - 42
+                    })`}
                     className="transition-all duration-300"
                   >
                     <PixelTortoiseSprite size={26} x={-13} y={-26} />
-                    <rect x="-26" y="2" width="52" height="14" fill="#0D1F18" />
-                    <rect x="-28" y="0" width="52" height="14" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="1.5" />
-                    <text x="-2" y="10" textAnchor="middle" fill="#FFFFFF" fontSize="6" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                    <rect x="-24" y="2" width="48" height="13" fill="#0D1F18" />
+                    <rect x="-26" y="0" width="48" height="13" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="1.5" />
+                    <text x="-2" y="9" textAnchor="middle" fill="#FFFFFF" fontSize="6.5" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
                       SLOW 1x
                     </text>
                   </g>
@@ -437,22 +442,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <g
                     transform={`translate(${
                       step.isCollision
-                        ? fastNode.x + 22
+                        ? fastNode.x + 32
                         : step.slowNode === step.fastNode
-                        ? fastNode.x + 18
+                        ? fastNode.x + 24
                         : fastNode.x
                     }, ${
-                      // When on different nodes, if Hare is at top node D, position below; otherwise position above
-                      step.slowNode !== step.fastNode && step.fastNode === 3
+                      step.isCollision
+                        ? fastNode.y - 18
+                        : step.slowNode !== step.fastNode && step.fastNode === 3
                         ? fastNode.y + 26
                         : fastNode.y - 42
                     })`}
                     className="transition-all duration-300"
                   >
-                    <PixelHareSprite size={26} x={-13} y={step.slowNode !== step.fastNode && step.fastNode === 3 ? 14 : -26} />
-                    <rect x="-26" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? -2 : 2} width="52" height="14" fill="#0D1F18" />
-                    <rect x="-28" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? -4 : 0} width="52" height="14" fill="#E76F51" stroke="#0D1F18" strokeWidth="1.5" />
-                    <text x="-2" y={step.slowNode !== step.fastNode && step.fastNode === 3 ? 6 : 10} textAnchor="middle" fill="#FFFFFF" fontSize="6" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+                    <PixelHareSprite 
+                      size={26} 
+                      x={-13} 
+                      y={!step.isCollision && step.slowNode !== step.fastNode && step.fastNode === 3 ? 14 : -26} 
+                    />
+                    <rect 
+                      x="-24" 
+                      y={!step.isCollision && step.slowNode !== step.fastNode && step.fastNode === 3 ? -2 : 2} 
+                      width="48" 
+                      height="13" 
+                      fill="#0D1F18" 
+                    />
+                    <rect 
+                      x="-26" 
+                      y={!step.isCollision && step.slowNode !== step.fastNode && step.fastNode === 3 ? -4 : 0} 
+                      width="48" 
+                      height="13" 
+                      fill="#E76F51" 
+                      stroke="#0D1F18" 
+                      strokeWidth="1.5" 
+                    />
+                    <text 
+                      x="-2" 
+                      y={!step.isCollision && step.slowNode !== step.fastNode && step.fastNode === 3 ? 6 : 9} 
+                      textAnchor="middle" 
+                      fill="#FFFFFF" 
+                      fontSize="6.5" 
+                      fontWeight="bold" 
+                      fontFamily="'Press Start 2P', monospace"
+                    >
                       FAST 2x
                     </text>
                   </g>

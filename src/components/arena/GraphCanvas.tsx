@@ -379,18 +379,21 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
           );
         })}
 
-        {/* Collision Animation (Pixel Starburst) - Only shown when status is strictly COLLISION */}
+        {/* Collision Animation (Pixel Starburst & Banner) */}
         {isCollision && slowNode && (
           <g transform={`translate(${slowNode.x}, ${slowNode.y})`}>
-            {/* Native SVG Starburst Flash */}
-            <PixelCollisionBurst size={56} x={-28} y={-28} />
+            {/* Native SVG Starburst Flash centering on the collision node */}
+            <PixelCollisionBurst size={64} x={-32} y={-32} />
+
+            {/* Concentric Energy Rings */}
+            <circle r="30" fill="none" stroke="#E63946" strokeWidth="2" strokeDasharray="4,3" opacity="0.85" />
             
-            {/* Collision Dialogue Box */}
-            <g transform="translate(0, -56)">
-              <rect x="-76" y="-14" width="152" height="28" fill="#0D1F18" />
-              <rect x="-78" y="-16" width="152" height="28" fill="#FAF5E6" stroke="#E63946" strokeWidth="3" />
+            {/* Elevated Collision Dialogue Box - Placed cleanly above or below to avoid any overlap */}
+            <g transform={`translate(0, ${slowNode.y < 100 ? 62 : -72})`}>
+              <rect x="-80" y="-13" width="160" height="26" fill="#0D1F18" />
+              <rect x="-82" y="-15" width="160" height="26" fill="#FAF5E6" stroke="#E63946" strokeWidth="2.5" />
               <text x="0" y="3" textAnchor="middle" fill="#E63946" fontSize="9" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
-                ★ POINTERS MET! ★
+                ★ COLLISION! ★
               </text>
             </g>
           </g>
@@ -400,35 +403,53 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         {slowNode && (
           <g
             transform={`translate(${
-              areBothOnSameNode ? slowNode.x - 22 : slowNode.x
-            }, ${slowNode.y - 48})`}
+              isCollision
+                ? slowNode.x - 38
+                : areBothOnSameNode
+                ? slowNode.x - 36
+                : slowNode.x
+            }, ${
+              isCollision
+                ? slowNode.y - 20
+                : slowNode.y - 48
+            })`}
             className="transition-all duration-300"
           >
             {/* Native SVG Tortoise Sprite */}
             <PixelTortoiseSprite size={30} x={-15} y={-30} />
             {/* Tortoise Label Tag */}
-            <rect x="-33" y="2" width="66" height="18" fill="#0D1F18" />
-            <rect x="-35" y="0" width="66" height="18" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
-            <text x="-2" y="12" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+            <rect x="-28" y="2" width="56" height="16" fill="#0D1F18" />
+            <rect x="-30" y="0" width="56" height="16" fill="#2A9D8F" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y="11" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               SLOW 1x
             </text>
           </g>
         )}
 
         {/* Hare Pixel Character Sprite Marker (Fast 2x) */}
-        {fastNode && !isCollision && (
+        {fastNode && (
           <g
             transform={`translate(${
-              areBothOnSameNode ? fastNode.x + 22 : fastNode.x
-            }, ${areBothOnSameNode ? fastNode.y - 48 : fastNode.y + 36})`}
+              isCollision
+                ? fastNode.x + 38
+                : areBothOnSameNode
+                ? fastNode.x + 36
+                : fastNode.x
+            }, ${
+              isCollision
+                ? fastNode.y - 20
+                : areBothOnSameNode
+                ? fastNode.y - 48
+                : fastNode.y - 48
+            })`}
             className="transition-all duration-300"
           >
             {/* Native SVG Hare Sprite */}
-            <PixelHareSprite size={30} x={-15} y={areBothOnSameNode ? -30 : 18} />
+            <PixelHareSprite size={30} x={-15} y={-30} />
             {/* Hare Label Tag */}
-            <rect x="-33" y={areBothOnSameNode ? 2 : 0} width="66" height="18" fill="#0D1F18" />
-            <rect x="-35" y={areBothOnSameNode ? 0 : -2} width="66" height="18" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
-            <text x="-2" y={areBothOnSameNode ? 12 : 10} textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
+            <rect x="-28" y="2" width="56" height="16" fill="#0D1F18" />
+            <rect x="-30" y="0" width="56" height="16" fill="#E76F51" stroke="#0D1F18" strokeWidth="2" />
+            <text x="-2" y="11" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="'Press Start 2P', monospace">
               FAST 2x
             </text>
           </g>
