@@ -6,9 +6,23 @@ import { LearningSection } from './components/learning/LearningSection';
 import { ChallengeMode } from './components/challenges/ChallengeMode';
 import { ComplexityLab } from './components/complexity/ComplexityLab';
 import { Footer } from './components/layout/Footer';
+import { EmbedVisualizer } from './components/embed/EmbedVisualizer';
 import { sound } from './utils/audio';
 
 export const App: React.FC = () => {
+  // Check if route or query flag requests chromeless embed mode (for Canva, slide decks, or iframes)
+  const isEmbed =
+    typeof window !== 'undefined' &&
+    (window.location.pathname.startsWith('/embed') ||
+      new URLSearchParams(window.location.search).get('embed') === 'true' ||
+      new URLSearchParams(window.location.search).get('embed') === '1' ||
+      window.location.hash.startsWith('#/embed') ||
+      window.location.hash.includes('embed=true'));
+
+  if (isEmbed) {
+    return <EmbedVisualizer />;
+  }
+
   const [activeTab, setActiveTab] = useState<NavTab>('arena');
   const [isMuted, setIsMuted] = useState<boolean>(sound.getMuted());
   const [isDmgMode, setIsDmgMode] = useState<boolean>(() => {
